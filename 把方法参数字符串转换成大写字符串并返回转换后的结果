@@ -1,0 +1,29 @@
+package comitheima.Oneday_Test;
+
+public class letterConversion {
+    public static void main(String[] args) {
+        char[] c = lConcersion("AAAABCabcACX");
+        System.out.println(c);
+    }
+
+    /**
+     * 定义方法,完成把方法参数字符串转换成大写字符串并返回转换后的结果
+     * A-Z在ASCll表中的码值：97 -- 122
+     * a-z在ASCll表中的码值：65 -- 90
+     * 大小写字母之间相差32
+     * @param arr
+     * @return
+     */
+    public static char[] lConcersion(String arr) {
+        //把字符串存放在char类型的数组中
+        char[] chars = arr.toCharArray();
+        for (int i = 0; i < chars.length; i++) {
+            if (chars[i] <= 90 && chars[i] >= 65) {
+                chars[i] += 32;
+            } else if (chars[i] <= 122 && chars[i] >= 97) {
+                chars[i] -= 32;
+            }
+        }
+        return chars;
+    }
+}
