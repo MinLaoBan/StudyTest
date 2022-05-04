@@ -1,0 +1,94 @@
+//旧手机
+package comitheima.Twoday_Test.FeatureUpgrades;
+
+/**
+ * 定一个OldPhone类,定义两个私有属性brand和price,定义空参和有参构造方法,get/set方法
+ * 在OldPhone类中,定义一个打电话的方法,传递姓名的参数,方法体内输出给谁打电话
+ * 在OldPhone类中,定义一个发短信的方法,直接输出"发短信"
+ * 定义一个来电显示的方法,输出内容为"显示手机号"
+ */
+public class OldPhone {
+    private String brand;
+    private double price;
+
+    public OldPhone() {
+    }
+
+    public OldPhone(String brand, double price) {
+        this.brand = brand;
+        this.price = price;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void call(String name){
+        System.out.println("给" + name + "打电话");
+    }
+    public void texting(){
+        System.out.println("发短信");
+    }
+    public void callerId(){
+        System.out.println("显示手机号");
+    }
+}
+
+
+//新手机
+package comitheima.Twoday_Test.FeatureUpgrades;
+
+/**
+ * 定一个子类NewPhone,继承OldPhone类,在子类中重写来电显示的方法,输出内容为"显示手机号","显示归属地","显示头像"
+ */
+public class NewPhone extends OldPhone{
+    @Override
+    public void callerId() {
+        System.out.println("显示手机号，显示归属地，显示头像");
+    }
+}
+
+//测试类
+package comitheima.Twoday_Test.FeatureUpgrades;
+
+/**
+ * 每一款手机都有自己的品牌和价格,原来的手机只能打电话,发短信,来电显示只能显示手机号;
+ * 现在的新手机针对于来电显示做了功能的升级,还能显示头像,还能显示归属地,请设计程序,完成手机的升级!
+ *
+ * 定义一个老手机类,包含品牌和价格两个属性,对应的构造,get/set方法,还有打电话,和发短信的方法,来电显示的方法
+ * 定义一个新手机,继承老手机类,重写来电显示方法进行升级
+ * 最后在测试类中为属性赋值,调用继承过来的方法以及来电显示方法
+ *
+ * 1.定一个OldPhone类,定义两个私有属性brand和price,定义空参和有参构造方法,get/set方法
+ * 2.在OldPhone类中,定义一个打电话的方法,传递姓名的参数,方法体内输出给谁打电话
+ * 3.在OldPhone类中,定义一个发短信的方法,直接输出"发短信"
+ * 4.定义一个来电显示的方法,输出内容为"显示手机号",
+ * 4.定一个子类NewPhone,继承OldPhone类,在子类中重写来电显示的方法,输出内容为"显示手机号","显示归属地","显示头像"
+ * 5.定义测试类,创建NewPhone类对象,调用set方法为属性赋值,调用get方法获取属性值
+ *
+ */
+
+public class FeatureUpgrades {
+    public static void main(String[] args) {
+        OldPhone phone = new NewPhone();
+        phone.setBrand("苹果");
+        phone.setPrice(5699);
+        System.out.println(phone.getBrand() + "手机，价格是" + phone.getPrice());
+        phone.texting();
+        phone.call("老六");
+        phone.callerId();
+    }
+}
+
