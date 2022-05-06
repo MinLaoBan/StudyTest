@@ -1,0 +1,64 @@
+//1.定义USB接口,定义两个抽象方法开启(open)和(close)方法
+package comitheima.FourDay_Test.Usb;
+
+public abstract interface USB {
+    public void open();
+    public void close();
+}
+
+//2.定义笔记本类,定义一个开机(start)方法,定义一个关机(stop),定义一个使用USB方法(useUSB(USB usb))
+package comitheima.FourDay_Test.Usb;
+
+public class MacBook {
+    public void start(){
+        System.out.println("开机了");
+    }
+
+    public void userUsb(USB u){
+        u.open();
+        u.close();
+    }
+    public void stop(){
+        System.out.println("关机了");
+    }
+}
+
+//3.定义测试类
+ *   3.1.创建笔记本对象,调用开机功能
+ *   3.2.调用使用USB方法(useUSB(USB usb)),MacBook中的useUSB方法需要传递USB的实现类,我们可以利用匿名       内部类的方式传递,来表示鼠标开启,鼠标关闭
+ *   3.3.调用使用USB方法(useUSB(USB usb)),MacBook中的useUSB方法需要传递USB的实现类,我们可以利用匿名       内部类的方式传递,来表示键盘开启,键盘关闭
+ package comitheima.FourDay_Test.Usb;
+public class MacBookTest {
+    public static void main(String[] args) {
+        MacBook macBook = new MacBook();
+        macBook.start();
+
+        //利用匿名内部类,操作鼠标,MacBook中的useUSB方法需要传递USB的实现类,匿名内部类代表的就是他的
+        macBook.userUsb(new USB() {
+            @Override
+            public void open() {
+                System.out.println("鼠标开启");
+            }
+
+            @Override
+            public void close() {
+                System.out.println("鼠标关闭");
+            }
+        });
+
+        macBook.userUsb(new USB() {
+            @Override
+            public void open() {
+                System.out.println("键盘打开");
+            }
+
+            @Override
+            public void close() {
+                System.out.println("键盘关闭");
+            }
+        });
+        macBook.stop();
+    }
+}
+
+
