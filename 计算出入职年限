@@ -1,0 +1,41 @@
+package comitheima.FiveDay_Test.AgeLimit;
+/**
+ * 某公司人事举办了这样一个活动,凡是入职6周年的员工,赠送一个精美小礼品,于是员工纷纷去计算了自己的入职年限,请设计程序,帮同事们计算出入职年限.
+ *
+ * 1.按照指定的格式将输入的日期转换成Date对象
+ * 2.获取Date对象对应的毫秒值
+ * 3.获取当前系统毫秒值,然后两个毫秒值相减
+ *
+ * 1.利用SimpleDateFormat中的parse方法将输入的日期转成Date对象
+ * 2.调用Date中getTime方法获取对应的毫秒值
+ * 3.调用System中的currentTimeMillis()方法获取当前系统毫秒值
+ * 4.两个毫秒值相减的出结果,再使用结果/ 1000 / 60 / 60 / 24得出天数,用天数除以365
+ */
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+
+public class AgeLimit {
+    public static void main(String[] args) throws Exception {
+        // 1. 接受键盘录入的入职日期字符串
+        System.out.println("请输入入职年份：");
+        Scanner sc = new Scanner(System.in);
+        String joinStr = sc.next();
+        // 2. 将日期字符串转换为日期对象，方便获取毫秒值
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date joinData = sdf.parse(joinStr);//parse强转data类型
+        // 3. 获取入职日期的毫秒值
+        long joinTime = joinData.getTime();
+        // 4. 获取今天的毫秒值
+        long nowTime = System.currentTimeMillis();//currentTimeMillis获取当前时间的毫秒值
+        // 5. 计算时间差
+        long result = nowTime - joinTime;
+        //6.将单位换算成天
+        long day = result / 1000 / 60 / 60 / 24;
+        int year = (int) (day/365);
+        //7.将天换算成年,并打印
+        System.out.println("您入职公司已经" + year + "年");
+
+    }
+}
