@@ -1,0 +1,50 @@
+package comitheima.FiveDay_Test.Data;
+
+import java.util.Calendar;
+import java.util.Scanner;
+
+/**
+ * 灵活运用Date和Calendar类的方法
+ *
+ * 1.使用Calendar的set方法去设置年月日
+ * 2.使用Calendar的add方法去减去1天
+ *
+ * 1.定义Scanner对象,调用nextInt方法键盘录入一个年份
+ * 2.调用getInstance()方法获取Calendar对象
+ * 3.调用Calendar中的set方法设置年,月,日
+ *   由于国外的月份和国内的月份不一样,所以,当我们设置2月的时候其实代表的是我们国内的3月
+ *   年份:我们输入的年份
+ *   月份:2月(实际上是我国3月份)
+ *   日:1日
+ * 4.调用Calendar中的add方法,让3月1日减去1天,就是二月的最后一天
+ * 5.调用Calendar中的get方法,获取得出的日期
+ * 6.输出输入的年份2月有多少天
+ * 7.判断,如果得出的日期==28天,证明是平年,共365天,否则就是闰年,共366天
+ */
+public class DataTest {
+    public static void main(String[] args) {
+        //定义Scanner对象,调用nextInt方法键盘录入一个年份
+        Scanner sc = new Scanner(System.in);
+        int year = sc.nextInt();
+        //调用getInstance()方法获取Calendar对象
+        Calendar calendar = Calendar.getInstance();
+        // 3.调用Calendar中的set方法设置年,月,日
+        //                由于国外的月份和国内的月份不一样,所以,当我们设置2月的时候其实代表的是我们国内的3月
+        //                年份:我们输入的年份
+        //                月份:2月(实际上是我国3月份)
+        //                日:1日
+        calendar.set(year,2,1);
+        //调用Calendar中的add方法,让3月1日减去1天,就是二月的最后一天
+        calendar.add(Calendar.DATE,-1);
+        ///5.调用Calendar中的get方法,获取得出的日期
+        int day = calendar.get(Calendar.DATE);
+        //输出输入的年份2月有多少天
+        System.out.println(year + "年的2月有" + day +"天");
+        //判断,如果得出的日期==28天,证明是平年,共365天,否则就是闰年,共366天
+        if (day == 28){
+            System.out.println( year + ",今年是平年!共365天");
+        }else if (day == 29){
+            System.out.println( year + ",今年是平年!共366天");
+        }
+    }
+}
