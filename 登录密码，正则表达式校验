@@ -1,0 +1,54 @@
+package comitheima.FiveDay_Test.Login;
+
+import java.util.Scanner;
+
+/**
+ * 正则表达式校验
+ *
+ * 1.需要定义出用户名,密码和电子邮箱的正则表达式
+ * 2.然后去校验,判断用户名,密码和电子邮箱的格式是否和正则表达式表示的规则一样,都一样,注册成功
+ *   否则,接着输入要注册的用户名,密码和电子邮箱
+ *
+ *
+ *
+ * 参考方案
+ * 1.用正则表达式规定出用户名,密码和电子邮箱的规则
+ *     String username = "[a-zA-Z0-9_]{3,16}";
+ *     String password = "[a-zA-Z0-9]+\\.+[a-zA-Z0-9]+";
+ *     String email = "[a-zA-Z0-9_]+@([a-z]+\\.[a-z]+)+";
+ * 2.利用循环,循环录入,并调用String中的matches方法去校验录入信息是否正确,
+ *   如果都返回是的true,显示注册成功,否则接着重新输入要注册的信息
+ */
+public class LoginTest {
+    public static void main(String[] args) {
+        //1.用正则表达式规定出用户名，密码和电子邮箱的规则
+        String userName = "[a-zA-Z0-9_]{3,16}";
+        String PassWorld = "[a-zA-Z0-9]{6,12}+\\.+";
+        String Email = "[0-9]{6,11}+@+([a-z]+\\.+[a-z]+)+";
+        //2.输入要注册的用户名,密码,邮箱
+        Scanner sc = new Scanner(System.in);
+        while (true){
+            System.out.println("请您输入用户名");
+            String name = sc.next();
+            //3.调用String中的matches方法校验要注册的用户名,密码,邮箱
+            boolean index1 = name.matches(userName);
+            System.out.println(index1);
+            System.out.println("请您输入密码");
+            String passworld = sc.next();
+            boolean index2 = passworld.matches(PassWorld);
+            System.out.println(index2);
+            System.out.println("请您输入邮箱");
+            String email = sc.next();
+            boolean index3 = email.matches(Email);
+            System.out.println(index3);
+            //判断,如果都校验成功,就显示"注册成功"
+            //否则,重新输入
+            if (index1 && index2 && index3){
+                System.out.println("注册成功");
+                break;
+            }else {
+                System.out.println("请继续注册：");
+            }
+        }
+    }
+}
