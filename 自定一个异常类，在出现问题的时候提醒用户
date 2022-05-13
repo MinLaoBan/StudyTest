@@ -1,0 +1,54 @@
+//定义一个异常类package comitheima.SixDay_Test.Exception;
+
+public class ArrayLengthNotZeroException extends RuntimeException {
+    public ArrayLengthNotZeroException() {
+    }
+
+    public ArrayLengthNotZeroException(String message) {
+        super(message);
+    }
+}
+
+
+//定义测试方法
+package comitheima.SixDay_Test.Exception;
+
+/**
+ * 某程序员编写了一个方法，该方法实现的逻辑是从传入的数组中找出最大值，但考虑到调用者可能会传入一个长度为0的数组，所以要给调用者进行相应的提示，
+ * 但是Java中并没有合适的异常类名可以直观的让调用者明白出现的问题，该程序员想自己设计一个运行时异常ArrayLengthNotZeroException，为自己的方法提供服务，请帮其实现功能.
+ *
+ * 1.定义一个异常类:ArrayLengthNotZeroException extends RuntimeException
+ * 2.如果调用获取数组中最大值的方法之后,传递的数组长度为0,那么直接
+ *   throw new ArrayLengthNotZeroException("数组长度不能为0!");
+ */
+public class Test {
+    public static void main(String[] args) {
+        //1.定义一个长度为0的数组(故意的)
+        int[] arr = new int[0];
+        //2.调用获取数组最大值的getMax方法,参数传递上面定义好的长度为0的数组
+        int max = getMax(arr);
+        //3.输出数组中的最大值
+        System.out.println("最大值为：" + max);
+    }
+
+    //4.定义一个获取数组最大值的方法,参数定义为数组类型
+    private static int getMax(int[] arr) {
+        //5.判断数组的长度是否为0
+        if (arr.length == 0){
+            //6.如果数组的长度为0,直接创建自定义异常对象,并抛出,提示:数组长度不能为0
+            throw new ArrayLengthNotZeroException("数组长度不能为0");
+        }
+        //7.定义一个变量,接收数组中的第一个元素
+        int max = arr[0];
+        //8.变量数组,将数组中的每一个元素获取出来
+        for (int i = 0; i < arr.length; i++) {
+            //9.判断max的值是否小于遍历出来的元素
+            if (arr[i] < max){
+                //10.如果max的值小于遍历出来的元素,就将这个大的元素重新赋值给这个max变量
+                max = arr[i];
+            }
+        }
+        //11.将拿到的最大值返回给调用处
+        return max;
+    }
+}
