@@ -1,0 +1,89 @@
+package comitheima.SevenDay_Test.ArrayList;
+//创建一个学生类
+public class Student {
+    private String name;
+    private double fraction;
+
+    public Student() {
+    }
+
+    public Student(String name, double fraction) {
+        this.name = name;
+        this.fraction = fraction;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getFraction() {
+        return fraction;
+    }
+
+    public void setFraction(double fraction) {
+        this.fraction = fraction;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", fraction=" + fraction +
+                '}';
+    }
+}
+
+
+package comitheima.SevenDay_Test.ArrayList;
+/**
+ * 有4个人参加公务员考试,考试成绩如图所示,录取3名学生,淘汰分数最低的一名,设计一个程序,完成需求
+ *
+ * 1.调用ArrayList中的add方法将学生对象添加到集合中
+ * 2.求出学生中分数最低的学生,调用ArrayList中的remove方法,将其删除
+ */
+
+import java.util.ArrayList;
+import java.util.Comparator;
+
+public class Test {
+    public static void main(String[] args) {
+        //2.创建4个学生对象
+        Student s1 = new Student("小三",569);
+        Student s2 = new Student("小四",669);
+        Student s3 = new Student("小五",649);
+        Student s4 = new Student("小六",549);
+        //1.定义一个ArrayList集合 list
+        ArrayList<Student> arrayList = new ArrayList<>();
+        //3.调用add方法将4个方法存到list集合中
+        arrayList.add(s1);
+        arrayList.add(s2);
+        arrayList.add(s3);
+        arrayList.add(s4);
+
+        //4.定义一个变量index,接收最低成绩学生的在集合中出现的索引
+        int index = 0;
+        //5.定义一个变量score,来接收集合中第一个学生的成绩
+        double sore = arrayList.get(0).getFraction();
+        //6.遍历集合,获取出来每一个学生对象的成绩,去和第一个学生成绩做比较
+        for (int i = 0; i < arrayList.size(); i++) {
+            double data = arrayList.get(i).getFraction();
+            //7.如果小于第一个学生成绩,就将成绩低的赋值给score,然后将对应的索引赋值给index
+            if (data < sore){
+                sore = data;
+                index = i;
+            }
+        }
+        //8.根据index将对应的学生调用remove删除
+        arrayList.remove(index);
+        for (int i = 0; i < arrayList.size(); i++) {
+            System.out.println("录取的学生姓名为" + arrayList.get(i).getName() + "成绩为" + arrayList.get(i).getFraction());
+        }
+
+
+    }
+}
+
