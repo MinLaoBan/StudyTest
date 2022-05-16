@@ -1,0 +1,115 @@
+package comitheima.SevenDay_Test.Arraylist_enroll;
+//创建用户类，用来存放注册信息
+public class User {
+    private String loginName;
+    private String passWorld;
+
+    public User() {
+    }
+
+    public User(String loginName, String passWorld) {
+        this.loginName = loginName;
+        this.passWorld = passWorld;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getPassWorld() {
+        return passWorld;
+    }
+
+    public void setPassWorld(String passWorld) {
+        this.passWorld = passWorld;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "loginName='" + loginName + '\'' +
+                ", passWorld='" + passWorld + '\'' +
+                '}';
+    }
+}
+
+
+package comitheima.SevenDay_Test.Arraylist_enroll;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
+
+/**
+ * 1.往集合中存储3个用户-->准备数据
+ *   "小明", "123"
+ *   "小红", "456"
+ *   "小勇", "789"
+ * 2.通过键盘录入的形式输入要注册的用户名和密码
+ *   如果集合中有输入的用户名和密码,证明已经注册了
+ *   否则,没有注册,并将其添加到集合中
+ *---------------------------------------------------
+ *  1.调用add添加3个用户-->做准备数据
+ *  2.通过键盘录入录入用户名和密码
+ *  3.遍历集合,调用String中的equals方法比较,如果录入的用户名和密码和遍历出来的一样,证明注册过,否则,调用add方法往集合中添加要注册的用户名和密码
+ */
+public class Test {
+    public static void main(String[] args) {
+        //1.创建3个已注册的数据
+        User u1 = new User("小明","123");
+        User u2 = new User("小红","456");
+        User u3 = new User("小勇","789");
+        //2.将数据添加到集合中
+        ArrayList<User> list = new ArrayList<>();
+        list.add(u1);
+        list.add(u2);
+        list.add(u3);
+
+        //4.用户输入要注册的用户名和密码
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请您输入用户名：");
+        String userName = sc.next();
+        System.out.println("请您输入密码：");
+        String userPassWorld = sc.next();
+
+        //5.判断list集合中是否存在输入的userName，如果存在返回true，否则返回false
+        //                             isUser是自己创建的一个判断list集合中是否存在输入的userName的方法，类型为boolean
+        boolean is = isUser(list,userName);
+        if (is){
+            System.out.println("此账号已被注册，快去登录吧！");
+        }else {
+            //将用户输入的用户名和密码添加到User对象中去
+            User uNew = new User(userName,userPassWorld);
+            //将对象类添加到集合中
+            list.add(uNew);
+            System.out.println("注册成功，快去登录吧！");
+        }
+        //6.打印集合
+        showUser(list);
+
+    }
+
+
+    //创建一个判断是否存在此用户名的方法，如果存在返回true，如果不存在返回false
+    public static boolean isUser(ArrayList<User> users,String userName){
+        for (User user : users) {
+            if (user.getLoginName().equals(userName)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //创建一个打印出集合的所有集合
+    public static void showUser (ArrayList<User> list){
+        Iterator<User> is = list.iterator();
+        while (is.hasNext()){
+            System.out.println(is.next());
+        }
+    }
+}
