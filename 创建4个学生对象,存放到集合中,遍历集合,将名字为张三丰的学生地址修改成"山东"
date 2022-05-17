@@ -1,0 +1,80 @@
+package comitheima.SevenDay_Test.ArrayList_revise;
+//创建学生对象
+public class Student {
+    private String name;
+    private String address;
+
+    public Student() {
+    }
+
+    public Student(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
+}
+
+
+package comitheima.SevenDay_Test.ArrayList_revise;
+
+import java.util.ArrayList;
+
+/**
+ * 创建4个学生对象,存放到集合中,遍历集合,将名字为张三丰的学生地址修改成"山东"
+ *
+ * 1.调用ArrayList中的add方法,将学生对象添加到集合
+ * 2.遍历集合,调用String中的equals方法判断名字是否为"张三丰"
+ * 3.如果是"张三丰",调用ArrayList中的set方法将地址修改成"山东"
+ *
+ */
+public class Test {
+    public static void main(String[] args) {
+        //1.创建4个学生对象
+        Student s1 = new Student("老五","陕西");
+        Student s2 = new Student("老六","山西");
+        Student s3 = new Student("老八","云南");
+        Student s4 = new Student("张三丰","撒哈拉");
+        //2.创建Arraylist集合
+        ArrayList<Student> list = new ArrayList<>();
+        //3.将4个学生对象添加到集合中
+        list.add(s1);
+        list.add(s2);
+        list.add(s3);
+        list.add(s4);
+        //4.遍历集合中的元素
+        for (int i = 0; i < list.size(); i++) {
+            Student student = list.get(i);
+            String name = student.getName();
+            //5.将张三丰的地址修改为山东
+            if ("张三丰".equals(name)){
+                student.setAddress("山东");
+            }
+        }
+        //6.打印修改完的集合
+        System.out.println(list);
+    }
+}
+
