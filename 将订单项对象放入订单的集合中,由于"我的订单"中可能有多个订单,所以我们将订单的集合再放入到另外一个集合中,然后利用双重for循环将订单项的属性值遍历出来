@@ -1,0 +1,117 @@
+package comitheima.SevenDay_Test.Product;
+
+public class ProductType {
+    //订单项id
+    private int productId;
+    //订单项编号
+    private int productNumber;
+    //订单项名称
+    private String name;
+    //订单项价格
+    private double price;
+
+    public ProductType() {
+    }
+
+    public ProductType(int productId, int productNumber, String name, double price) {
+        this.productId = productId;
+        this.productNumber = productNumber;
+        this.name = name;
+        this.price = price;
+    }
+
+    public int getProductId() {
+        return productId;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public int getProductNumber() {
+        return productNumber;
+    }
+
+    public void setProductNumber(int productNumber) {
+        this.productNumber = productNumber;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductType{" +
+                "productId=" + productId +
+                ", productNumber=" + productNumber +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
+}
+
+
+package comitheima.SevenDay_Test.Product;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+
+/**
+ *
+ * ArrayList集合,迭代器，集合嵌套,利用双重for循环遍历
+ *
+ * 将订单项对象放入订单的集合中,由于"我的订单"中可能有多个订单,所以我们将订单的集合再放入到另外一个集合中,然后利用双重for循环将订单项的属性值遍历出来
+ *
+ * 1.定义一个订单项类,提供构造,get/set方法
+ * 2.定义一个集合用于存储多个订单
+ * 3.定义一个集合用于存储多个订单项
+ * 4.创建订单项对象,将对象添加到集合
+ * 5.将每一个订单存到集合中
+ * 6.遍历集合
+ */
+
+public class Test {
+    public static void main(String[] args) {
+        //创建存放订单的集合
+        ArrayList<ArrayList<ProductType>> list = new ArrayList<>();
+
+        //创建存放订单项的集合
+        ArrayList<ProductType> productTypesList = new ArrayList<>();
+
+        //创建随机数对象
+        Random r = new Random();
+        //创建订单项，并把新订单添加到订单项的集合中
+        productTypesList.add(new ProductType(1,r.nextInt(1000000),"酸奶",50));
+        productTypesList.add(new ProductType(2,r.nextInt(1000000),"拖鞋",150));
+        productTypesList.add(new ProductType(3,r.nextInt(1000000),"裤子",250));
+        productTypesList.add(new ProductType(4,r.nextInt(1000000),"羽绒服",550));
+
+        //将订单项集合存放到订单的集合中
+        list.add(productTypesList);
+
+        //遍历集合
+        Iterator<ArrayList<ProductType>> iterator = list.iterator();
+        while (iterator.hasNext()){
+            ArrayList<ProductType> items = iterator.next();
+            for (int i = 0; i < items.size(); i++) {
+                ProductType p = items.get(i);
+                System.out.println("编号：" + p.getProductId() + "|号码：" + p.getProductNumber() + "|名称：" + p.getName() + "|价格：" + p.getPrice());
+            }
+        }
+    }
+}
+
