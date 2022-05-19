@@ -1,0 +1,90 @@
+package comitheima.EightDay_Test.CollorBall;
+//定义球类
+public class Ball {
+    private String color;
+    private int id;
+
+    public Ball() {
+    }
+
+    public Ball(String color, int id) {
+        this.color = color;
+        this.id = id;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Ball{" +
+                "color='" + color + '\'' +
+                ", id=" + id +
+                '}';
+    }
+}
+
+
+package comitheima.EightDay_Test.CollorBall;
+/**
+ * 彩票双色球规则：双色球每注投注号码由6个红色球号码和1个蓝色球号码组成。红色球号码从1~33中选择；蓝色球号码从1~16中选择；
+ * 请结合集合所学知识，随机生成一注双色球号码，要求同色号码不重复。
+ *
+ * HashSet,增强for,ArrayList,Collections
+ *
+ * 1.由于6个红色球,号码不能重复,所以可以利用HashSet存储
+ * 2.排序由于Collections中的sort不能对set集合进行排序,所以,可以将HashSet中的号码放到ArrayList集合中
+ *
+ * 1.创建HashSet存储6个不同的红色球号码
+ * 2.遍历HashSet集合,将每一个元素保存到ArrayList集合中,再用Collections的sort方法对ArrayList集合进行排序
+ */
+
+import java.util.*;
+
+public class Test {
+    public static void main(String[] args) {
+        //创建hashset集合
+        HashSet<Ball> hashSet = new HashSet<>();
+        Random r = new Random();
+        //往hashset集合中添加6个红球
+        while (hashSet.size() < 6){
+                hashSet.add(new Ball("红",r.nextInt(33) + 1));
+        }
+        //创建arraylist集合
+        ArrayList<Ball> arrayList = new ArrayList<>();
+        Iterator<Ball> iterator = hashSet.iterator();
+        //遍历hashset集合并添加到arraylist集合
+        while (iterator.hasNext()){
+            arrayList.add(iterator.next());
+        }
+        //随机生成一个篮球
+        Ball ball = new Ball("蓝",r.nextInt(16) + 1);
+        //利用collections的sort排序，并自定升序排序规则
+        Collections.sort(arrayList, new Comparator<Ball>() {
+            @Override
+            public int compare(Ball o1, Ball o2) {
+                return o1.getId() - o2.getId();
+            }
+        });
+        //遍历arraylist集合并打印
+        for (Ball redball : arrayList) {
+            System.out.println("球" + redball.getColor() + "色，号码" + redball.getId());
+        }
+        //打印篮球
+        System.out.println("球" + ball.getColor() + "色，号码" + ball.getId());
+    }
+}
+
