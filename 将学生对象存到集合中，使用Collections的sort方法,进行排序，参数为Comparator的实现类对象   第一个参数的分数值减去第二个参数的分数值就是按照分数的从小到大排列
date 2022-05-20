@@ -1,0 +1,87 @@
+package comitheima.EightDay_Test.Comparator_Test;
+//创建学生类
+public class Student {
+    private int id;
+    private String name;
+    private double score;
+
+    public Student() {
+    }
+
+    public Student(int id, String name, double score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getScore() {
+        return score;
+    }
+
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", score=" + score +
+                '}';
+    }
+}
+
+
+package comitheima.EightDay_Test.Comparator_Test;
+/**
+ * Comparator,增强for,Collections
+ *
+ * 1.将学生对象存到集合中
+ * 2.使用Collections的sort方法,进行排序
+ *   参数为Comparator的实现类对象
+ *   第一个参数的分数值减去第二个参数的分数值就是按照分数的从小到大排列
+ */
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class Test {
+    public static void main(String[] args) {
+        //创建4个学生对象并添加到list集合中
+        ArrayList<Student> list = new ArrayList<>();
+        list.add(new Student(1,"小明",435));
+        list.add(new Student(2,"李娜",459));
+        list.add(new Student(3,"王帅",499));
+        list.add(new Student(4,"贾克",389));
+        //利用Collections的sort 自定以分数升序排序
+        Collections.sort(list, new Comparator<Student>() {
+            @Override
+            public int compare(Student o1, Student o2) {
+                return (int) (o1.getScore() - o2.getScore());
+            }
+        });
+        //遍历及合，打印出按分数升序之后的集合
+        for (Student student : list) {
+            System.out.println("编号：" + student.getId() + "名字：" + student.getName() + "分数" + student.getScore());
+        }
+    }
+}
+
