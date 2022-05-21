@@ -1,0 +1,102 @@
+package comitheima.EightDay_Test.Login;
+
+import java.util.Objects;
+
+/**
+ * //User类
+ */
+public class User {
+    private String loginName;
+    private String passWord;
+
+    public User() {
+    }
+
+    public User(String loginName, String passWord) {
+        this.loginName = loginName;
+        this.passWord = passWord;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "loginName='" + loginName + '\'' +
+                ", passWord='" + passWord + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(loginName, user.loginName) && Objects.equals(passWord, user.passWord);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(loginName, passWord);
+    }
+}
+
+
+package comitheima.EightDay_Test.Login;
+/**
+ *当我们在京东注册新用户的时候,我们输入一个要注册的用户名,如果之前有该用户名注册过,京东是不会让相同的用户名注册的,会注册失败.根据以上描述,设计程序,完成注册功能!
+ * HashSet
+ *
+ * 1.输入用户名和密码之后,如果集合中有该用户,直接显示"注册失败"
+ * 2.如果集合中没有该用户,直接显示"注册成功"
+ */
+
+import java.util.HashSet;
+import java.util.Scanner;
+
+public class Test {
+
+    public static void main(String[] args) {
+        //1.创建HashSet对象
+        HashSet<User> hashSet = new HashSet<>();
+        //存储一个用户名和密码
+        hashSet.add(new User("min","1234"));
+        //2.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("请输入用户名");
+            String userLoginName = sc.next();
+            System.out.println("请输入用户名");
+            String userPassword = sc.next();
+            //3.创建一个对象,将输入的用户名和密码封装成User对象
+            User user = new User(userLoginName,userPassword);
+
+            //4.添加到set集合,如果add返回的是true,证明可以添加,集合中没有重复的元素
+            //                否则add方法返回false,证明不可以添加,集合中有重复的元素
+            if (hashSet.add(user)){
+                System.out.println("注册成功，快去登录吧");
+                System.out.println("当前的用户有：" + hashSet);
+                break;
+            }else {
+                System.out.println("您注册的账户已存在");
+                break;
+            }
+        }
+
+    }
+}
+
