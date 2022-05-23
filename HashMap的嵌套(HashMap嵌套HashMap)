@@ -1,0 +1,53 @@
+package comitheima.NineDay_Test.HashMap_Nested;
+/**
+ * HashMap的嵌套(HashMap嵌套HashMap)
+ *
+ * 1.创建一个JavaSE基础班的HashMap集合,一个JavaEE就业班的HashMap集合,key为学号,value为姓名
+ * 2.创建另外一个HashMap集合,key为:"JavaSE基础班", value为存储学号,姓名的HashMap集合
+ *   再存储一个key为:"JavaEE就业班", value为存储学号,姓名的HashMap集合
+ * 3.遍历外层HashMap集合,得出内部HashMap集合,再遍历内部HashMap集合中的学号和姓名
+ */
+
+import java.util.HashMap;
+import java.util.Set;
+
+public class Test {
+    public static void main(String[] args) {
+        // 1.定义Java基础班的HashMap<String, String>
+        HashMap<String,String> map = new HashMap<>();
+        // 2.存放2个学生到Java基础班的Map
+        map.put("001","李晨");
+        map.put("002","范冰冰");
+        // 3.定义Java就业班的HashMap<String, String>
+        HashMap<String,String> map1 = new HashMap<>();
+        // 4.存放2个学生到Java就业班的Map
+        map1.put("001","马云");
+        map1.put("002","马化腾");
+
+        // 5.定义某学校集合HashMap<String, HashMap<String, String>>
+        HashMap<String,HashMap<String,String>> hashMap = new HashMap<>();
+
+        // 6.将Java基础班和Java就业班存放到某学校HashMap集合中
+        hashMap.put("java基础班",map);
+        hashMap.put("java就业班",map1);
+
+        // 7.使用keySet和增强for遍历出里面的元素
+        // 7.1使用keySet获取某学校集合的所有key
+        Set<String> keyset = hashMap.keySet();
+        // 7.2使用增强for获取某学校集合每个key
+        for (String keyValue : keyset) {
+            //7.3通过key找value,value是Java基础班的HashMap和Java就业班的HashMap
+            System.out.println(keyValue);
+            HashMap<String,String> classMap = hashMap.get(keyValue);
+            // 7.4拿到班级的HashMap所有key
+            Set<String> classKey = classMap.keySet();
+            // 7.5遍历班级的每个key(学号)
+            for (String s1 : classKey){
+                // 7.6根据班级的key(学号)去找value(姓名)
+                String value = classMap.get(s1);
+                System.out.println("\t" + s1 + value);
+            }
+        }
+
+    }
+}
