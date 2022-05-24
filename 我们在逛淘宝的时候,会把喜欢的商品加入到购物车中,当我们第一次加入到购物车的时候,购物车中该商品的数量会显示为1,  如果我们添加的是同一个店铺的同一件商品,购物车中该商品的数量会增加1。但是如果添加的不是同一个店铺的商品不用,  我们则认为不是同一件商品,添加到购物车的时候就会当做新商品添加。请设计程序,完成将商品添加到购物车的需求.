@@ -1,0 +1,117 @@
+package comitheima.NineDay_Test.ShoppingCart;
+
+import java.util.Objects;
+
+public class Product {
+    private String store;
+    private String name;
+
+    public Product() {
+    }
+
+    public Product(String store, String name) {
+        this.store = store;
+        this.name = name;
+    }
+
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "store='" + store + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return Objects.equals(store, product.store) && Objects.equals(name, product.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(store, name);
+    }
+}
+
+
+package comitheima.NineDay_Test.ShoppingCart;
+/**
+ * 我们在逛淘宝的时候,会把喜欢的商品加入到购物车中,当我们第一次加入到购物车的时候,购物车中该商品的数量会显示为1,
+ * 如果我们添加的是同一个店铺的同一件商品,购物车中该商品的数量会增加1。但是如果添加的不是同一个店铺的商品不用,
+ * 我们则认为不是同一件商品,添加到购物车的时候就会当做新商品添加。请设计程序,完成将商品添加到购物车的需求.
+ *
+ * HashMap,HashMap的遍历
+ *
+ * 1.我们用Product对象作为key,数量作为value,所以要保证key唯一,我们的Product就要重写hashCode和equals方
+ *   法
+ * 2.当我们往集合中存的时候,要利用containsKey方法判断集合中有没有店铺和商品名称都一样的对象,如果没有,证明购物车中是第一次添加此商
+ *   品,value为1
+ * 3.如果集合中有店铺和商品名称都一样的对象,证明购物车之前已经添加了此商品,我们就调用get方法根据key获取
+ *   value,让value+1,最后重新存到集合中即可
+ */
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
+
+public class Test {
+    public static void main(String[] args) {
+        //1.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+        //2.创建Map集合对象
+        HashMap<Product,Integer> hashMap = new HashMap<>();
+        //3.循环将商品加入购物车
+        while (true){
+        System.out.println("请输入要添加商品的店铺(输入end退出)：");
+            String store = sc.next();
+            if ("end".equals(store)){
+                break;
+            }
+            System.out.println("请输入添加的商品名称：");
+            String name = sc.next();
+            //4.根据输入的店铺名称和商品名称,封装成Product对象
+            Product newP = new Product(store,name);
+            //5.如果集合中不包含我们添加的同一个店铺同一个商品的话,直接往集合中添加该商品
+            if (!hashMap.containsKey(newP)){
+                hashMap.put(newP,1);
+            }else {
+                //6.否则将该商品对应的值(数量)从集合中获取出来,让其加1
+                Integer number = hashMap.get(newP);
+                //7.将加1之后的商品重新添加到集合中
+                number++;
+                hashMap.put(newP,number);
+                look(hashMap);
+            }
+
+        }
+    }
+    public static void look(HashMap<Product, Integer> hashMap) {
+        //8.遍历集合
+        Set<Map.Entry<Product, Integer>> entrySet = hashMap.entrySet();
+        for (Map.Entry<Product, Integer> entry : entrySet) {
+            Product key = entry.getKey();
+            Integer value = entry.getValue();
+            System.out.println(key+"-->"+value);
+        }
+    }
+}
