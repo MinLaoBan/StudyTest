@@ -1,0 +1,82 @@
+package comitheima.TenDay_Test.Thread_Print;
+//1、定义线程任务类PrinterNumTask,实现Runnable接口
+public class printerNumber implements Runnable{
+    //1.1、定义int类型成员变量num，初始化值1,代表要打印的数字从1开始
+    int num = 1;
+    //1.2、 覆盖重写run方法（使用同步方法或同步代码块保证数据安全），按照打印要求实现功能（死循环内部嵌套 同步）
+    @Override
+    public void run() {
+        while (true){
+            synchronized (this){
+                //1.2.1、如果num>52,结束循环
+                if (num > 52){
+                    break;
+                }
+                //1.2.2、如果num<=52,打印数字
+                //打印数字
+                System.out.println(Thread.currentThread().getName() + num + "");
+                num++;
+            }
+        }
+    }
+}
+
+
+package comitheima.TenDay_Test.Thread_Print;
+//2、定义线程任务类PrinterCharTask,实现Runnable接口
+public class printfChar implements Runnable{
+    //2.1、定义char类型成员变量aChar，初始化值‘A’,代表要打印的字母从A开始
+    char aChar = 'A';
+    //2.2、 覆盖重写run方法（使用同步方法或同步代码块保证数据安全），按照打印要求实现功能（死循环内部嵌套 同步）
+    @Override
+    public void run() {
+        while (true){
+            synchronized (this){
+                //1.2.1、如果aChar>‘Z’,结束循环
+                if (aChar > 'Z'){
+                    break;
+                }
+                //1.2.2、如果ch<=‘Z’,,打印字母
+                //打印字符
+                System.out.println(Thread.currentThread().getName() + aChar + "");
+                aChar++;
+            }
+        }
+    }
+}
+
+
+package comitheima.TenDay_Test.Thread_Print;
+
+/**
+ * 编写四个线程两个线程打印1-52的整数,另两个线程打字母印A-Z.
+ * 整体打印数字和字母的顺序没有要求,要求分别单独看数字,单独看字母为升序排列的
+ * 每个数字和字母之间用空格隔开
+ * 不要求两个线程轮流打
+ *
+ *
+ */
+
+//3、定义测试类Test
+public class Test {
+    public static void main(String[] args) {
+        //3.1、创建线程任务printerNumber类的对象，代表打印数字的线程任务
+        printerNumber n1 = new printerNumber();
+        //3.1、创建线程任务printfChar类的对象，代表打印数字的线程任务
+        printfChar c1 = new printfChar();
+
+        //3.3、创建2个Thread类的对象，传递线程任务PrinterNumTask类的对象
+        Thread t1 = new Thread(n1,"1号");
+        Thread t2 = new Thread(n1,"2号");
+        //3.4、创建2个Thread类的对象，传递线程任务PrinterCharTask类的对象
+        Thread t3 = new Thread(c1,"3号");
+        Thread t4 = new Thread(c1,"4号");
+
+        //3.5、4个Thread类的对象分别调用start方法，开启线程
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+    }
+}
+
