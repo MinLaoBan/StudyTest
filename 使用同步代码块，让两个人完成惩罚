@@ -1,0 +1,87 @@
+package comitheima.TenDay_Test.Thread_Runnable;
+//2、定义线程任务类CopyRunnable,实现Runnable接口
+public class CopyRunnable implements Runnable{
+    //2.1、定义Punishment类型成员变量punishment
+    private Punishment punishment;
+    //2.2、定义构造方法，给成员变量punishment赋值
+    public CopyRunnable(Punishment punishment) {
+        this.punishment = punishment;
+    }
+    //2.3、覆盖重写run方法（使用同步方法或同步代码块保证数据安全），按照打印要求实现功能
+    @Override
+    public synchronized void run() {
+        //定义int变量,统计每个线程的书写次数
+    int count = 0;
+        //获取线程名称
+    String threadName = Thread.currentThread().getName();
+    while (true){
+        //同步代码块
+        synchronized (this){
+            //如果没有写完
+            if (punishment.getLeftCount() > 0){
+                //获取剩余次数
+                int leftCount = punishment.getLeftCount();
+                System.out.println(threadName + "抄写一边" + punishment.getCopyWord() + "。两人总共还有抄写" + (--leftCount) + "次");
+                //修改剩余次数
+                punishment.setLeftCount(leftCount);
+                //计数器+1
+                count++;
+            }else {
+                //写完了，终止循环
+                break;
+            }
+        }
+    }
+        //输出每个线程的书写次数
+        System.out.println(threadName + "线程--一共写了" + count + "次");
+    }
+}
+
+
+package comitheima.TenDay_Test.Thread_Runnable;
+//1、定义惩罚Punishment类
+public class Punishment {
+    private int leftCount;//抄写次数
+    private String copyWord;//抄写内容
+
+    public Punishment() {
+    }
+    //1.3、 定义构造方法，给初始化抄写次数和抄写内容
+    public Punishment(int leftCount, String copyWord) {
+        this.leftCount = leftCount;
+        this.copyWord = copyWord;
+    }
+    //1.4、 定义set和get方法
+    public int getLeftCount() {
+        return leftCount;
+    }
+
+    public void setLeftCount(int leftCount) {
+        this.leftCount = leftCount;
+    }
+
+    public String getCopyWord() {
+        return copyWord;
+    }
+
+    public void setCopyWord(String copyWord) {
+        this.copyWord = copyWord;
+    }
+}
+
+package comitheima.TenDay_Test.Thread_Runnable;
+
+public class Test {
+    public static void main(String[] args) {
+        //3.1、创建惩罚类Punishment的对象,初始化抄写次数为100,抄写内容为HelloWorld
+        Punishment punishment = new Punishment(100,"HelloWorld");
+        //3.2、创建线程任务CopyRunnable类的对象，传递惩罚类Punishment的对象
+        CopyRunnable copyRunnable = new CopyRunnable(punishment);
+        //3.3、创建2个Thread类的对象，传递线程任务CopyRunnable类的对象并指定线程名称
+        Thread t1 = new Thread(copyRunnable,"小明");
+        Thread t2 = new Thread(copyRunnable,"小王");
+        //3.4、2个Thread类的对象分别调用start方法，开启线程
+        t1.start();
+        t2.start();
+    }
+}
