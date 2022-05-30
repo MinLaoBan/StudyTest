@@ -1,0 +1,117 @@
+package comitheima.TwelveDay_Test.Print_Lock;
+
+/**
+ * 编写两个线程,一个线程打印1-52的整数，另一个线程打印字母A-Z。打印顺序为12A34B56C….5152Z。
+ * 即按照整数和字母的顺序从小到大打印，并且每打印两个整数后，打印一个字母，
+ * 交替循环打印，直到打印到整数52和字母Z结束。
+ * 数字和字母之间用空格隔开
+ * 要求两个线程轮流交替打印
+ *
+ * 能够使用等待唤醒多线程解决交替打印数字和字母问题。
+ *
+ * 创建两个任务类,一个负责打印数字,一个负责打印字母,开启两个线程,每个线程处理一个任务,通过等待唤醒实现交替打印。
+ */
+//定义测试类Test
+
+public class Test {
+    public static void main(String[] args) {
+        //创建Printer类的对象p
+        Printer printer = new Printer();
+        //创建线程任务NumberPrinterTask类的对象，代表打印数字的线程任务
+        NumberPrinterTesk n1 = new NumberPrinterTesk(printer);
+        //创建线程任务LetterPrinterTask类的对象，代表打印字母的线程任务
+        LatterPrinterTesk l1 = new LatterPrinterTesk(printer);
+        //创建1个Thread类的对象，传递线程任务NumberPrinterTask类的对象
+        Thread t1 = new Thread(n1);
+        //创建1个Thread类的对象，传递线程任务LatterPrinterTesk类的对象
+        Thread t2 = new Thread(l1);
+
+        //2个Thread类的对象分别调用start方法，开启线程
+        t1.start();
+        t2.start();
+
+
+    }
+}
+
+
+package comitheima.TwelveDay_Test.Print_Lock;
+
+public class LatterPrinterTesk implements Runnable{
+    //定义Printer类型成员变量p
+    private Printer p;
+    //生成构造方法,给成员变量p初始化
+    public LatterPrinterTesk(Printer p) {
+        this.p = p;
+    }
+    //2.3、 覆盖重写run方法,方法内部循环打印A-Z的字母
+    @Override
+    public void run() {
+        for(char c='A';c<='Z';c++){
+            p.print(c);
+        }
+    }
+}
+
+
+
+package comitheima.TwelveDay_Test.Print_Lock;
+//定义线程任务类NumberPrinterTask,实现Runnable接口
+public class NumberPrinterTesk implements Runnable{
+    //定义Printer类型成员变量p
+    private Printer p;
+    //生成构造方法,给成员变量p初始化
+    public NumberPrinterTesk(Printer p) {
+        this.p = p;
+    }
+    // 覆盖重写run方法,方法内部循环打印1-52的数字
+    @Override
+    public void run() {
+        for (int i = 1; i <= 52; i++) {
+            p.print(i);
+        }
+    }
+}
+
+
+package comitheima.TwelveDay_Test.Print_Lock;
+//1、定义Printer类
+public class Printer {
+    //1.1、定义int类型成员变量index，初始化值1,代表要打印的是数字还是字母
+    private int index = 1;
+    public synchronized void print(int i){
+        while (index%3 == 0){
+            try {
+                //当前线程等待
+                wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //打印数字
+        System.out.println("" + i + "");
+        //编号+1
+        index++;
+        //唤醒所有线程
+        notifyAll();
+    }
+
+    //定义同步方法print，用于打印字母
+    private synchronized void print(char c){
+        while (index%3 != 0){
+            try {
+                wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        //打印字母
+        System.out.println(c + "");
+        //编号+1
+        index++;
+        //唤醒所有线程
+        notifyAll();
+    }
+
+}
+
