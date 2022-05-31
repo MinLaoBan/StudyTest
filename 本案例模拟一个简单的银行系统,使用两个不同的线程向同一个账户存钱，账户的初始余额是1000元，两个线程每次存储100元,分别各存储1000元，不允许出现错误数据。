@@ -1,0 +1,103 @@
+package comitheima.TwelveDay_Test.Thread_Runnable;
+
+/**
+ * 本案例模拟一个简单的银行系统,使用两个不同的线程向同一个账户存钱。
+ * 账户的初始余额是1000元，两个线程每次存储100元,分别各存储1000元，不允许出现错误数据。
+ * 程序运行结果如下图所示：要求轮流存
+ * 要求使用wait和notify方法实现
+ *
+ * 定义账户类，初始化账户余额。提供存钱和获取前的方法，开启两个线程操作账户,通过等待唤醒实现轮流存钱
+ */
+//3、定义测试类Test
+public class Test {
+    public static void main(String[] args) {
+        //3.1、创建账户类Account的对象,初始化余额为1000元
+        Account account = new Account(1000);
+        //3.2、创建线程任务Transfer类的对象，传递账户类Account的对象
+        Transfer transfer = new Transfer(account);
+        //3.3、创建2个Thread类的对象，传递线程任务Transfer类的对象并指定线程名称
+        Thread t1 = new Thread(transfer,"老王");
+        Thread t2 = new Thread(transfer,"小三");
+        //3.4、2个Thread类的对象分别调用start方法，开启线程
+        t1.start();
+        t2.start();
+    }
+}
+
+package comitheima.TwelveDay_Test.Thread_Runnable;
+//1、定义银行账户Account类
+public class Account {
+    //1.1、 定义int类型成员变量leftMoney，代表账户余额
+    private int leftMoney;
+    //1.2、 定义构造方法，给账户初始化
+    public Account() {
+    }
+
+    public Account(int leftMoney) {
+        this.leftMoney = leftMoney;
+    }
+
+    public int getLeftMoney() {
+        return leftMoney;
+    }
+
+    public void setLeftMoney(int leftMoney) {
+        this.leftMoney = leftMoney;
+    }
+    //1.3、 定义deposit方法，给账户存钱
+    public  int deposit(int money){
+        return leftMoney += money;
+    }
+    //1.4、 定义getLeftMoney方法，查看账户余额
+    public int getleftMoney(){
+        return leftMoney;
+    }
+}
+
+
+package comitheima.TwelveDay_Test.Thread_Runnable;
+//2、定义线程任务类Transfer,实现Runnable接口
+public class Transfer implements Runnable{
+    //2.1、定义Account类型成员变量account
+    Account account = new Account();
+    //2.2、定义标记
+    private boolean flag = true;
+    //2.3、定义构造方法，给成员变量account赋值
+    public Transfer(Account account) {
+        this.account = account;
+    }
+    //2.4、覆盖重写run方法（使用同步方法或同步代码块保证数据安全,等待唤醒实现轮流存入），
+    @Override
+    public synchronized void run() {
+        //方法内部使用for循环，执行10次存钱，并打印账户余额的操作
+        //定义int变量,保存每个线程存钱的次数
+        int count = 0;
+        while (true){
+            synchronized (this){
+                //超过10次结束循环,唤醒所有线程
+                if (count >= 10){
+                    this.notifyAll();
+                    break;
+                }
+                //修改标记
+                flag = !flag;
+                // 向账户中存入100块钱
+                    account.deposit(100);
+                    System.out.println(Thread.currentThread().getName() + "第" + (count+1) + "次，存入100元，之后账户余额：" + account.getLeftMoney());
+                    //记录次数
+                    count++;
+                    //唤醒所有线程
+                    this.notifyAll();
+                    try {
+                        //当前线程等待
+                        this.wait();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+            }
+        }
+    }
+}
+
+
