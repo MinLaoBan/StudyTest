@@ -1,0 +1,81 @@
+package comitheima.ThirteenDay_Test.IO_Properties;
+
+import java.io.*;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Scanner;
+
+/**
+ * 我们在使用软件的过程中会出现使用次数已到,无法继续免费使用,需要续费.像这种限制软件免费使用次数,
+ * 可以使用IO流技术和Properties集合完成。只需要在使用软件的时候把使用次数,记录到配置文件中,每次使用时先读取配置文件信息,
+ * 检测如果超过免费次数,停止软件使用(结束JVM).
+ *
+ *
+ */
+public class Test {
+    public static void main(String[] args) throws Exception {
+        System.out.println();
+        //创建配置文件times.properties对应的File对象
+        File configFile = new File("StudyTest//src//times.properties");
+        //如果配置文件不存在，则创建文件
+        if (!configFile.exists()){
+            configFile.createNewFile();
+        }
+        //创建Properties对象
+        Properties pero = new Properties();
+        //把配置中的文件加载到Properties集合中
+        pero.load(new FileInputStream(configFile));
+
+        //获取键times的值，表示已经运行的次数
+        String times = pero.getProperty("times");
+        //根据times的值提示剩余机会并调用猜数字方法，times的值为3，不用调用猜数字方法，直接退出jvm虚拟机
+        if (times != null && "3".equals(times)){
+            System.out.println("您的三次机会已用完，请去充值！！");
+            //退出虚拟机
+            System.exit(0);
+        }else {
+            System.out.println("您的免费机会剩余：" + (3-(times == null? 0 : Integer.parseInt(times))) + "次，请珍惜");
+            //调用方法完成猜数字
+            //guessNum();
+        }
+        //如果times为null，说明第一次运行，向properties集合对象存储键值对times=1
+        if (times == null){
+            pero.setProperty("times","1");
+        }else {
+            //如果不是第一次执行，将times的值在原有的基础上加1
+            pero.setProperty("times",Integer.parseInt(times)+1+"");
+        }
+        //把properties中的内容写入文件
+        pero.store(new FileOutputStream(configFile),null);
+    }
+
+    //为了方便使用把之前猜数字案例的代码定义成方法
+    public static void guessNum() {
+        //创建Random对象
+        Random r = new Random();
+
+        //使用Random对象生成一个1-100(包含1,包含100)之间的数字,保存在int变量guessNum
+        int guessNum = r.nextInt(100)+1;
+
+        //创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+
+        while (true){
+            System.out.println("请你输入1-100之间的数字");
+            int userNum = r.nextInt();
+            if (userNum>guessNum){
+                System.out.println("大了");
+            }else if (userNum < guessNum){
+                System.out.println("小了");
+            }else {
+                System.out.println("猜中了");
+                break;
+            }
+        }
+    }
+}
+
+
+
+//times.properties文件内容如下
+times=2
