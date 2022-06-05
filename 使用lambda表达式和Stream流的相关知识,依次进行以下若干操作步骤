@@ -1,0 +1,151 @@
+package comitheima.ThirteenDay_Test.List_Stream;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+/**
+ * 有两个List集合对象分别代表两个队伍,每个List集合对象存储若干个字符串,每个字符串代表一个学生信息,该信息由学生所属班级,学生姓名,考试成绩三部分组成,之间用逗号隔开.
+ *
+ * 使用lambda表达式和Stream流的相关知识,依次进行以下若干操作步骤:
+ * 	1.第一个队伍根据字符串内容转换成对应的Student对象
+ *     2.第一个队伍筛选之后不要前2个人；
+ *     3.第一个队伍只要名字为4个字的成员；
+ *     4.第一个队伍只要成绩及格的成员；
+ *
+ *     5.第二个队伍根据字符串内容转换成对应的Student对象
+ *     6.第二个队伍筛选之后只要前5个人；
+ *     7.第二个队伍只要名字为3个字的且包含 静 字的成员；
+ *     8.第二个队伍只要成绩及格的成员；
+ *
+ *     9.把两个队伍筛选后的结果合并成一个队伍
+ *     10.打印整个队伍的Student对象信息。
+ */
+public class Test {
+    public static void main(String[] args) {
+        //第一个队伍数据
+        List<String> one = new ArrayList<>();
+        one.add("JavaEE353,何洁,95");
+        one.add("JavaEE353,杨坤,60");
+        one.add("JavaEE353,迪丽热巴,85");
+        one.add("JavaEE353,凤凰传奇,95");
+        one.add("JavaEE353,刘德华,50");
+        one.add("JavaEE353,乌兰图雅,50");
+        one.add("JavaEE353,筷子兄弟,90");
+        Stream<String> os1 = one.stream();
+        //1.第一个队伍根据字符串内容转换成对应的Student对象
+        Stream<Student> os2 = os1.map((s)-> {
+            Student student = new Student();
+            //切割字符串
+            String[] arr = s.split(",");
+            //调用set方法给成员变量复制
+            student.setId(arr[0]);
+            student.setName(arr[1]);
+            student.setScore(Integer.parseInt(arr[2]));
+            return student;
+        });
+        //2.第一个队伍筛选之后不要前2个人
+        Stream<Student> os3 = os2.skip(2);
+        //3.第一个队伍只要名字为4个字的成员
+        Stream<Student> os4 = os3.filter((Student stu) -> {
+           return stu.getName().length() == 4;
+        });
+        //4.第一个队伍只要成绩及格的成员
+        Stream<Student> os5 = os4.filter((Student st) -> {
+            return st.getScore() >= 60;
+        });
+
+
+
+        //第二个队伍数据
+        List<String> two = new ArrayList<>();
+        two.add("JavaEE355,胡静,96");
+        two.add("JavaEE355,贾静雯,62");
+        two.add("JavaEE355,伊能静,87");
+        two.add("JavaEE355,张静初,97");
+        two.add("JavaEE355,蒋林静,52");
+        two.add("JavaEE355,张一山,90");
+        two.add("JavaEE355,胡一天,83");
+        //把第二个队伍转换成Stream流
+        Stream<String> st1 = two.stream();
+        //5.第二个队伍根据字符串内容转换成对应的Student对象
+        Stream<Student> st2 = st1.map((s) -> {
+            Student student = new Student();
+            //切割字符串
+            String[] arr = s.split(",");
+            student.setId(arr[0]);
+            student.setName(arr[1]);
+            student.setScore(Integer.parseInt(arr[2]));
+            return student;
+        });
+        //6.第二个队伍筛选之后只要前5个人
+        Stream<Student> st3 = st2.limit(5);
+        //7.第二个队伍只要名字为3个字的且包含 静 字的成员；
+        Stream<Student> st4 = st3.filter((Student stu) -> {
+            return stu.getName().length() == 3 && stu.getName().contains("静");
+        });
+        //8.第二个队伍只要成绩及格的成员；
+        Stream<Student> st5 = st4.filter((Student stu) -> {
+            return stu.getScore() >= 60;
+        });
+
+        //9.把两个队伍筛选后的结果合并为一个队伍
+        Stream<Student> ots = Stream.concat(st5,os5);
+        //10.打印整个队伍的Student对象信息
+        ots.forEach((Student stu)->{
+            System.out.println(stu);
+        });
+    }
+}
+
+
+package comitheima.ThirteenDay_Test.List_Stream;
+
+public class Student {
+    private String id;
+    private String name;
+    private int score;
+
+    public Student() {
+    }
+
+    public Student(String id, String name, int score) {
+        this.id = id;
+        this.name = name;
+        this.score = score;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", score=" + score +
+                '}';
+    }
+}
+
