@@ -1,0 +1,221 @@
+package comitheima.ThirteenDay_Test.List_Stream04;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+/**
+ * 定义Coder类描述程序员,包含姓名name(String类型),性别gender(String类型),年龄age(int类型),工资salary(int类型),分类type(String类型.取值比如:java表示java程序员,c++表示c++程序员,php表示php程序员,test表示软件测试程序员).
+ *
+ * 有两个List集合对象,分别存储一些java程序员和软件测试程序员.
+ * 使用lambda表达式和Stream流的相关知识,依次进行以下若干操作步骤:
+ * 	1.java程序员工资增加10%
+ *     2.过滤出月薪超过8000元的java男程序员
+ *     3.过滤出年龄超过23岁的java程序员
+ *     4.跳过第一个java程序员
+ *     5.java程序员按照工资升序排列
+ *
+ *     6.软件测试程序员工资增加5%
+ *     7.过滤出月薪超过8500的软件测试女程序员
+ *     8.过滤出年龄超过24岁的软件测试程序员
+ *     9.只要前六个软件测试程序员
+ *     10.软件测试程序员按照工资降序排列
+ *
+ *     11.把筛选后的java程序员和软件测试程序员合并到一起
+ *     12.把合并后的结果映射成String(只要name,gender,salary),遍历输出
+ * 初始化数据如下:
+ *    	List<Coder> javaCoders = new ArrayList<Coder>();
+ *     javaCoders.add(new Coder("Elsdon", "Java", "男", 28, 20000));
+ *     javaCoders.add(new Coder("Tamsen", "Java", "男", 23, 15000));
+ *     javaCoders.add(new Coder("Floyden", "Java", "男", 33, 18000));
+ *     javaCoders.add(new Coder("Sindy", "Java", "女", 32, 16000));
+ *     javaCoders.add(new Coder("Vere", "Java", "男", 22, 12000));
+ *     javaCoders.add(new Coder("Maugden", "Java", "男", 27, 18500));
+ *     javaCoders.add(new Coder("Shawang", "Java", "男", 26, 23000));
+ *     javaCoders.add(new Coder("Jaydeng", "Java", "男", 35, 17000));
+ *     javaCoders.add(new Coder("Palmery", "Java", "男", 33, 20000));
+ *     javaCoders.add(new Coder("Addison", "Java", "男", 34, 13000));
+ *
+ *     List<Coder> testCoders = new ArrayList<Coder>();
+ *     testCoders.add(new Coder("Jarried", "test", "女", 34, 8550));
+ *     testCoders.add(new Coder("Clarette", "test", "女", 23, 9200));
+ *     testCoders.add(new Coder("Victor", "test", "男", 32, 8600));
+ *     testCoders.add(new Coder("Torying", "test", "女", 25, 12000));
+ *     testCoders.add(new Coder("Osborne", "test", "女", 32, 11000));
+ *     testCoders.add(new Coder("Rosalin", "test", "女", 25, 9300));
+ *     testCoders.add(new Coder("Frasery", "test", "女", 36, 8800));
+ *     testCoders.add(new Coder("Quinn", "test", "女", 23, 9900));
+ *     testCoders.add(new Coder("Aliving", "test", "女", 38, 13000));
+ *     testCoders.add(new Coder("Evonne", "test", "女", 30, 15000));
+ */
+public class Test {
+    public static void main(String[] args) {
+        List<Coder> javaCoders = new ArrayList<Coder>();
+        javaCoders.add(new Coder("Elsdon", "Java", "男", 28, 20000));
+        javaCoders.add(new Coder("Tamsen", "Java", "男", 23, 15000));
+        javaCoders.add(new Coder("Floyden", "Java", "男", 33, 18000));
+        javaCoders.add(new Coder("Sindy", "Java", "女", 32, 16000));
+        javaCoders.add(new Coder("Vere", "Java", "男", 22, 12000));
+        javaCoders.add(new Coder("Maugden", "Java", "男", 27, 18500));
+        javaCoders.add(new Coder("Shawang", "Java", "男", 26, 23000));
+        javaCoders.add(new Coder("Jaydeng", "Java", "男", 35, 17000));
+        javaCoders.add(new Coder("Palmery", "Java", "男", 33, 20000));
+        javaCoders.add(new Coder("Addison", "Java", "男", 34, 13000));
+
+        //获取list集合对象的stream流
+        Stream<Coder> js1 = javaCoders.stream();
+        //1.java程序员工资增加10%
+        js1.forEach((Coder c)->{
+            int salary = c.getSalary();
+            //工资增加10%
+            salary *= 1.1;
+            //调用set方法重新设置工资
+            c.setSalary(salary);
+        });
+        //2.过滤出月薪超过8000元的java男程序员
+        Stream<Coder> js2 = javaCoders.stream();
+        Stream<Coder> js3 = js2.filter((Coder c)->{
+            return c.getSalary() > 8000 && c.getGender().equals("男");
+        });
+
+        //3.过滤出年龄超过23岁的java程序员
+        Stream<Coder> js4 = js3.filter((Coder c)->{
+            return c.getAge() > 23;
+        });
+
+        //4.跳过第一个java程序员
+        Stream<Coder> js5 = js4.skip(1);
+
+        //5.java程序员按照工资升序排列
+        Stream<Coder> js6 = js5.sorted((Coder c1,Coder c2)->{
+            return c1.getSalary() - c2.getSalary();
+        });
+        System.out.println("-------------");
+
+        List<Coder> testCoders = new ArrayList<Coder>();
+        testCoders.add(new Coder("Jarried", "test", "女", 34, 8550));
+        testCoders.add(new Coder("Clarette", "test", "女", 23, 9200));
+        testCoders.add(new Coder("Victor", "test", "男", 32, 8600));
+        testCoders.add(new Coder("Torying", "test", "女", 25, 12000));
+        testCoders.add(new Coder("Osborne", "test", "女", 32, 11000));
+        testCoders.add(new Coder("Rosalin", "test", "女", 25, 9300));
+        testCoders.add(new Coder("Frasery", "test", "女", 36, 8800));
+        testCoders.add(new Coder("Quinn", "test", "女", 23, 9900));
+        testCoders.add(new Coder("Aliving", "test", "女", 38, 13000));
+        testCoders.add(new Coder("Evonne", "test", "女", 30, 15000));
+
+        //把list集合对象转换成Stream流
+        Stream<Coder> tx1 = testCoders.stream();
+        //6.软件测试程序员工资增加5%
+        tx1.forEach((Coder c)->{
+            int salary = c.getSalary();
+            salary *= 1.05;
+            c.setSalary(salary);
+        });
+        //7.过滤出月薪超过8500的软件测试女程序员
+        Stream<Coder> tx2 = testCoders.stream();
+        Stream<Coder> tx3 = tx2.filter((Coder c)->{
+            return c.getSalary() > 8500 && c.getGender().equals("女");
+        });
+
+        //8.过滤出年龄超过24岁的软件测试程序员
+        Stream<Coder> tx4 = tx3.filter((Coder c)->{
+            return c.getAge() > 24;
+        });
+
+        //9.只要前六个软件测试程序员
+        Stream<Coder> tx5 = tx4.limit(6);
+
+        //10.软件测试程序员按照工资降序排列
+        Stream<Coder> tx6 = tx5.sorted((Coder c1,Coder c2)->{
+            return c2.getSalary() - c1.getSalary();
+        });
+
+        //11.把筛选后的java程序员和软件测试程序员合并到一起
+        Stream<Coder> tj = Stream.concat(js6,tx6);
+
+        //12.把合并后的结果映射成String(只要name,gender,salary),遍历输出
+        Stream<String> jts = tj.map((Coder c)->{
+            return "姓名:" + c.getName() + ",性别:" + c.getGender() + ",工资:" + c.getSalary();
+        });
+
+        jts.forEach((String s) ->{
+            System.out.println(s);
+        });
+
+    }
+}
+
+
+package comitheima.ThirteenDay_Test.List_Stream04;
+
+public class Coder {
+        private String name;//姓名
+        private String type;//分类: java 程序员,PHP 程序员
+        private String gender;//性别
+        private int age;//年龄
+        private int salary;//工资
+
+    public Coder() {
+    }
+
+    public Coder(String name, String type, String gender, int age, int salary) {
+        this.name = name;
+        this.type = type;
+        this.gender = gender;
+        this.age = age;
+        this.salary = salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Coder{" +
+                "name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", gender='" + gender + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                '}';
+    }
+}
+
