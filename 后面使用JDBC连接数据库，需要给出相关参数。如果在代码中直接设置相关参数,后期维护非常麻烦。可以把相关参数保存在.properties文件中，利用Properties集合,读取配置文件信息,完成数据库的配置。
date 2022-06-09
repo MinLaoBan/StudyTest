@@ -1,0 +1,87 @@
+package comitheima.ThirteenDay_Test.Properties;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.Properties;
+
+/**
+ * 后面使用JDBC连接数据库，需要给出相关参数。如果在代码中直接设置相关参数,后期维护非常麻烦。可以把相关参数保存在.properties文件中，利用Properties集合,读取配置文件信息,完成数据库的配置。
+ * 本练习通过Properties集合,读取.properties文件信息,创建HMDataBaseConfig类的对象并给其成员变量完成赋值。
+ *
+ * 能够读取properties配置文件信息，并封装对象。
+ */
+
+public class Test {
+    public static void main(String[] args) throws Exception {
+        //创建Properties集合对象props
+        Properties props = new Properties();
+        //创建字节输入流FileInputStream类的对象fis，绑定源文件config.properties
+        FileInputStream fis = new FileInputStream("StudyTest\\src\\config.properties");
+        //Properties集合对象props调用load方法，把文件以键值对的方式加载到Properties集合中
+        props.load(fis);
+        //Properties集合对象props调用getProperty传递属性名，获取属性值
+        String url = props.getProperty("url");
+        String userName = props.getProperty("userName");
+        String passWord = props.getProperty("passWord");
+
+        //创建HMDataBaseConfig对象
+        HMDataBaseConfig hmDataBaseConfig = new HMDataBaseConfig();
+        //调用set方法，给HMDataBaseConfig类赋值
+        hmDataBaseConfig.setUrl(url);
+        hmDataBaseConfig.setUserName(userName);
+        hmDataBaseConfig.setPassWord(passWord);
+        //打印对象信息
+        System.out.println(hmDataBaseConfig);
+    }
+}
+
+
+package comitheima.ThirteenDay_Test.Properties;
+
+public class HMDataBaseConfig {
+    private String userName;
+    private String passWord;
+    private String url;
+
+
+    @Override
+    public String toString() {
+        return "您连接数据库的信息如下：\r\n" + "连接数据库路径" + url + "用户名" + userName + "密码" + passWord;
+    }
+    //无参构造器
+    public HMDataBaseConfig() {
+    }
+
+    //有参构造器
+
+    public HMDataBaseConfig(String userName, String passWord, String url) {
+        this.userName = userName;
+        this.passWord = passWord;
+        this.url = url;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassWord() {
+        return passWord;
+    }
+
+    public void setPassWord(String passWord) {
+        this.passWord = passWord;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+}
+
