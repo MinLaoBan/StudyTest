@@ -1,0 +1,184 @@
+package comitheima.FourteenDay_Test.TCP_01;
+/**
+ *
+ * 能够编写TCP协议下的注册登录功能
+ *
+ *
+ * 在京东/淘宝等商城购物时,需要先注册账户,把用户名和密码保存到京东/淘宝等商城的服务器上.购物之前必须先登录,验证用户输入的用户名和密码与京东/淘宝等商城的服务器保存的用户名和密码是否一致,如果一致登录成功,如果不一致登录失败.
+ *
+ * 本案例使用TCP协议模拟登录操作(Socket作为客户端,ServerSocket作为服务器端),在服务器创建user.properties文件,保存已经注册的用户的用户名和密码(格式:root=toor,左侧root代表用户名,右侧toor代表密码),客户端通过键盘录入用户名和密码,发送给服务器端进行验证,验证通过,服务器端给出客户端响应"登录成功"提示信息,验证失败,服务器端给出客户端响应"登录失败"提示信息.
+ */
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Test01LoginClient {
+    public static void main(String[] args) throws Exception {
+        //1.创建客户端对象socket对象，指定连接的服务器端的ip地址和端口号
+        Socket cilent = new Socket("localhost",10086);
+        //2.客户端对象socket获取字节输出流对象，给服务器发送数据
+        OutputStream outputStream = cilent.getOutputStream();
+        //3.把字节输出流对象封装成字符缓冲输出流
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
+        //4.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+        //5、获取键盘录入的String类型的用户名
+        String userName = sc.next();
+        //6、获取键盘录入的String类型的密码
+        String userPassWord = sc.next();
+        //7.客户端字符缓冲输出流调用write方法给服务端发送数据
+        bw.write(userName);
+        bw.newLine();//给服务器发送一个回车换行,说明该行结束了,服务器端用readLine方法可以读取一行信息
+        bw.write(userPassWord);
+        bw.newLine();
+        bw.flush();//因为数据被写入缓冲区的数组中,必须要刷新
+
+        //告诉服务器,客户端这边数据发送完毕
+        cilent.shutdownOutput();
+        //8.客户端socket对象获取字节输入流对象，读取服务器发回来的信息并打印
+        InputStream inputStream = cilent.getInputStream();
+        //9.把客户端socket对象字节输入流包装成字符缓冲输入流
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        String info = br.readLine();
+        System.out.println(info);
+
+        //10.关闭流释放资源
+        br.close();
+        bw.close();
+        cilent.close();
+
+    }
+}
+
+package comitheima.FourteenDay_Test.TCP_01;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Properties;
+
+//网络登录服务器代码--单线程
+public class Test01LoginServer {
+    public static void main(String[] args) throws Exception {
+        //2.创建服务端ServerSocket对象，指定端口号
+        ServerSocket server = new ServerSocket(10086);
+        //3.加载配置文件信息到properties集合对象中（键：用户名，值：密码）
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("StudyTest\\src\\user.properties"));
+        //4.服务器端serversocket对象调用accept方法，获取连接服务器的客户端socket对象
+        Socket client = server.accept();
+        //5.获取服务器端的字节输入流对象
+        InputStream netis = client.getInputStream();
+        //6.把服务器端的字节输入流对象包装成字符缓冲输入流
+        BufferedReader bf = new BufferedReader(new InputStreamReader(netis));
+        //7.服务端的字符缓冲输入流对象调用readLine方法读取客户端发送来的请求信息（用户登录时输入的用户名和密码）
+        String userName = bf.readLine();
+        String userPassword = bf.readLine();
+        System.out.println("------------------------------");
+
+        //8.获取服务端的字节输出流对象
+        OutputStream netOs = client.getOutputStream();
+        //9.把服务端的字节输出流对象封装成字符缓冲输出流
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(netOs));
+        boolean result = false;
+
+        //10.遍历properties集合判断输入的用户名和密码是否正确
+        for (String key : properties.stringPropertyNames()){
+            //11.如果用户名和密码正确，服务器对象字符缓冲输出流对象调用write方法，写出信息“登录成功”给客户端
+            if (key.equals(userName) && properties.getProperty(key).equals(userPassword)){
+                bw.write("登录成功");
+                bw.newLine();
+                bw.flush();
+                result = true;
+                break;
+            }
+        }
+        //12.如果用户名和密码不正确，服务的字符缓冲输出流对象调用write方法，写出信息“登录失败”给客户端
+        if (result == false){
+            bw.write("登录失败");
+            bw.newLine();
+            bw.flush();
+        }
+
+        //13、关闭流,释放资源
+        bw.close();
+        bf.close();
+        client.close();
+        server.close();
+
+
+
+
+
+    }
+}
+
+
+
+
+package comitheima.FourteenDay_Test.TCP_01;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Map;
+import java.util.Properties;
+
+//网络登录服务器代码--多线程
+public class Test01LoginServer02 {
+    public static void main(String[] args) throws Exception {
+        //2、创建服务器端ServerSocket对象,指定端口号
+        ServerSocket server = new ServerSocket(10086);
+        //3、加载配置文件信息到Properties集合对象中(键:用户名,值:密码)
+        Properties props = new Properties();
+        props.load(new FileInputStream("StudyTest\\src\\user.properties"));
+        while (true) {
+            //4、服务器端ServerSocket对象调用accept方法,获取连接服务器的客户端Socket对象
+            Socket client = server.accept();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(10000);
+                        //5、获取服务器端的字节输入流对象
+                        InputStream netIs = client.getInputStream();
+                        //6、把服务器端的字节输入流对象转换成字符缓冲输入流对象
+                        BufferedReader br = new BufferedReader(new InputStreamReader(netIs));
+                        String userName = br.readLine();
+                        String password = br.readLine();
+                        System.out.println("-------------------------");
+                        //8、获取服务器端的字节输出流对象
+                        OutputStream netOs = client.getOutputStream();
+                        //9、把服务器端的字节输出流对象转换成字符缓冲输出流对象
+                        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(netOs));
+                        boolean result = false;
+                        //10.遍历properties集合判断输入的用户名和密码是否正确
+                        for (String key : props.stringPropertyNames()){
+                            //11、如果用户名和密码正确,服务器端字符缓冲输出流对象调用write方法,写出信息"登录成功"给客户端
+                            if (key.equals(userName) && props.getProperty(key).equals(password)) {
+                                bw.write("登陆成功");
+                                bw.newLine();
+                                bw.flush();
+                                result = true;
+                                break;
+                            }
+                        }
+                        //12、如果用户名和密码不正确,服务器端字符缓冲输出流对象调用write方法,写出信息"登录失败"给客户端
+                        if(result==false) {
+                            bw.write("登陆失败");
+                            bw.newLine();
+                            bw.flush();
+                        }
+                        //13、关闭流,释放资源
+                        br.close();
+                        bw.close();
+                        client.close();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
+}
