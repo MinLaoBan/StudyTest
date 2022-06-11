@@ -1,0 +1,177 @@
+package comitheima.FourteenDay_Test.TCP_02;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+/**
+ * 能够编写TCP协议下的聊天程序
+ *
+ * 在商城上买东西,可能会进行前期的商品咨询,以及购买商品后的售后服务咨询.网上商城后台的一个服务人员,可以为多个客户提供服务.请使用TCP模拟多个客户端和服务器端进行数据传输功能,每个客户端可以给服务器端不断发送请求数据,服务器端也可以给客户端不断发送响应数据,要求客户端给服务器发一条信息,服务器必须给客户端回一条信息,如果 客户端发送信息中包含"拜拜"/"再见"等字样,则表示结束与服务器端的数据发送.
+ */
+public class Test02ChatClient {
+    public static void main(String[] args) throws Exception {
+        //1.创建客户端对象socket，指定服务端的ip地址和端口号
+        Socket client = new Socket("localhost",10666);
+        System.out.println("----------客户端启动------------");
+        //2.客户端socket对象调用getoutputstream方法，获取客户端的字节输出流对象
+        OutputStream netOs = client.getOutputStream();
+        //3.把客户端字节流输出对象封装成字符缓冲输出流
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(netOs));
+        //4.客户端socket对象调用getinputstream方法，获取客户端的字节输入流对象
+        InputStream netIs = client.getInputStream();
+        //5.把客户端字节输入流包装成字符缓冲输入流
+        BufferedReader br = new BufferedReader(new InputStreamReader(netIs));
+
+        //6.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+
+        String line = "";
+        String line2 = "";
+
+        //7.客户端循环读（读取服务器发回来的数据）写（写出到服务器端的数据）
+        //7.1客户端读取键盘录入数据
+        while((line = sc.nextLine()) != null){
+            //发送给服务器端
+            bw.write(line);
+            bw.newLine();
+            bw.flush();
+            //7.2客户端读取服务器发回来的响应数据，并打印在控制台上
+            line2 = br.readLine();
+            System.out.println("客户端收到的服务端信息：" + line2);
+            //7.3判断客户端发送的信息中，包含‘再见’和‘拜拜’等字样，结束与服务端的交流，关闭客户端
+            if (line.contains("再见")||line.contains("拜拜")){
+                client.close();
+                break;
+            }
+        }
+        //关闭资源
+        bw.close();
+        br.close();
+    }
+}
+
+
+package comitheima.FourteenDay_Test.TCP_02;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+
+//TCP聊天服务器端--单线程
+public class Test02ChatServer01 {
+    public static void main(String[] args) throws Exception {
+        //1.创建服务端对象
+        ServerSocket server = new ServerSocket(10666);
+        System.out.println("-----------服务端启动----------");
+        //2.服务端调用accept连接客户端
+        Socket client = server.accept();
+        //3.服务端client对象调用getinputstream获取服务端字节输入流
+        InputStream netIs = client.getInputStream();
+        //4.把服务端的字节输入流封装成字符缓冲输入流
+        BufferedReader br = new BufferedReader(new InputStreamReader(netIs));
+        //5.获取服务端的字节输出流
+        OutputStream netOs = client.getOutputStream();
+        //6.把服务端的字节输出流封装成字符缓冲输出流
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(netOs));
+        //7.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+
+        String line = "";
+        //8.服务端循环读取（读客户端发送过来的信息）写（写给客户端响应信息）
+        //8.1读取客户端发送的请求数据
+        while ((line = br.readLine())!=null){
+            //打印到控制台上
+            System.out.println("服务端收到客户端信息：" + line);
+            //8.2、判断客户端发送的信息中,如果包含"拜拜","再见"等字样,服务器端直接原样回复信息,并关闭客户端
+            if (line.contains("再见") || line.contains("拜拜")){
+                bw.write(line);
+                bw.newLine();
+                bw.close();
+                break;
+            }
+            //8.3服务端读取键盘输入的数据
+            line = sc.nextLine();
+            bw.write(line);
+            bw.newLine();
+            bw.flush();
+        }
+        //关闭流，释放资源
+        bw.close();
+        br.close();
+        server.close();
+
+    }
+}
+
+
+
+package comitheima.FourteenDay_Test.TCP_02;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Test02ChatServer02 {
+    public static void main(String[] args) throws Exception {
+        //1.创建服务端对象
+        ServerSocket server = new ServerSocket(10666);
+        System.out.println("=======服务端启动======");
+        while (true){
+            //2.服务端调用accept连接客户端
+            Socket client = server.accept();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        //3.创建服务端的字节输入流
+                        InputStream netIs = client.getInputStream();
+                        //4.把服务端的字节输入流包装成字符缓冲输入流
+                        BufferedReader br = new BufferedReader(new InputStreamReader(netIs));
+                        //5.创建服务端的字节输出流
+                        OutputStream netOs = client.getOutputStream();
+                        //6.把服务端的字节输出流包装成字符缓冲输出流
+                        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(netOs));
+                        //7.创建Scanner对象
+                        Scanner sc = new Scanner(System.in);
+                        String line = "";
+
+                        //8、客户端循环读(读取客户端发送过来的请求数据)写(写给客户端响应数据)
+                        //8.1、读取客户端发送的请求数据
+                        while ((line = br.readLine())!= null){
+                            System.out.println("服务端收到的客户端信息：" + line);
+                            if (line.contains("再见") || line.contains("拜拜")){
+                                bw.write(line);
+                                bw.newLine();
+                                bw.flush();
+                                client.close();
+                                break;
+                            }
+                            //8.2服务端读取键盘输入的数据
+                            line = sc.nextLine();
+                            //发送给客户端
+                            bw.write(line);
+                            bw.newLine();
+                            bw.flush();
+                        }
+                        //关闭流，释放资源
+                        bw.close();
+                        br.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+
+    }
+}
+
+
+
+
+
+
+
