@@ -1,0 +1,146 @@
+package comitheima.FourteenDay_Test.TCP_04;
+
+import java.io.*;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Test04DownLoadCliend {
+    public static void main(String[] args) throws Exception {
+        //1.创建客户端socket对象
+        Socket client = new Socket("localhost",10086);
+        System.out.println("-------------客户端已启动--------------");
+        //2.获取客户端字节输出流对象，给服务端发数据
+        OutputStream netOs = client.getOutputStream();
+        //3.创建Scanner对象
+        Scanner sc = new Scanner(System.in);
+        System.out.println("请输入要下载的文件路径：");
+        //4.获取键盘录入的String类型的文件全路径
+        String filePath = sc.nextLine();
+        //5.客户端调用字节输出流的write方法，给服务器发送需要下的文件路径
+        netOs.write(filePath.getBytes());
+        //6.客户端获取字节输入流，用来读取服务端发回来的数据（需要下载的文件）
+        InputStream netIs = client.getInputStream();
+        //7.创建文件字节输出流FileOutputStream类的对象，绑定目标文件（用于把客户端下载的文件字节内容写出到客户端目标文件）
+        FileOutputStream fos = new FileOutputStream(new File("StudyTest/src",new File(filePath).getName()));
+        byte[] bs = new byte[1024];
+        int len = 0;
+        //8.循环读（服务器）写（客户端本地文件）
+        while ((len = netIs.read(bs))!=-1){
+            fos.write(bs,0,len);
+        }
+        System.out.println("文件下载完毕！");
+
+        //9.关闭流，释放资源
+        netIs.close();
+        netOs.close();
+        fos.close();
+        client.close();
+
+    }
+}
+
+
+package comitheima.FourteenDay_Test.TCP_04;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Test04DownLoadServer01 {
+    public static void main(String[] args) throws Exception {
+        //1.创建服务端对象
+        ServerSocket server = new ServerSocket(10086);
+        System.out.println("-------------服务端已启动----------");
+        //2.服务端调用accept方法连接客户端
+        Socket client = server.accept();
+        //3.获取服务端的字节输入流
+        InputStream netIs = client.getInputStream();
+        byte[] bs = new byte[1024];
+        int len = 0;
+        len = netIs.read(bs);
+
+        //4.服务端在字节输入流对象调用read方法，读取客户端请求信息（要下载文件的全路径）
+        String finePath = new String(bs,0,len);
+        System.out.println("客户端需要下载" + finePath + "文件");
+
+        //5.创建文件字节输入流FileInputStream对象，绑定源标文件（以字节的方式读取客户端要下载的文件）
+        FileInputStream fis = new FileInputStream(finePath);
+        //6.获取客户端的字节输出流
+        OutputStream netOs = client.getOutputStream();
+        //7.循环读（服务端的本地文件）写（客户端）
+        while ((len = fis.read(bs))!= -1){
+            netOs.write(bs,0,len);
+        }
+        //8、服务器端Socket对象调用shutdownOutput方法,通知客户端文件传输完毕
+        client.shutdownOutput();
+
+        //9.关闭流，释放资源
+        fis.close();
+        netOs.close();
+        netIs.close();
+        client.close();
+        server.close();
+        System.out.println("文件传输完毕");
+
+
+    }
+}
+
+
+
+package comitheima.FourteenDay_Test.TCP_04;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Test04DownLoadServer02 {
+    public static void main(String[] args) throws Exception {
+        //1.创建服务端对象
+        ServerSocket server = new ServerSocket(10086);
+        System.out.println("服务端以启动");
+        //2.服务端连接客户端
+        Socket client = server.accept();
+        //为当前客户端开启一个线程，执行文件下载任务
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //3.获取服务端的字节输入流对象
+                    InputStream netIs = client.getInputStream();
+                    byte[] bs = new byte[1024];
+                    int len = 0;
+                    len = netIs.read(bs);
+                    //4.服务端的字节流输入对象调用read方法，读取客户端请求信息（客户端需要下载的文件全路径）
+                    String filePath = new String(bs,0,len);
+                    System.out.println("客户端需要下载" + filePath + "文件");
+                    //5.创建文件字节输入流对象FileInputStream对象，绑定源标文件（以字节的方式读取客户端要下载的文件）
+                    FileInputStream fis = new FileInputStream(new File(filePath));
+                    //6.获取客户端的字节输出流对象
+                    OutputStream netOs = client.getOutputStream();
+                    //7.循环读（服务器的本地文件）写（客户端）
+                    while ((len=fis.read(bs))!=-1){
+                        netOs.write(bs,0,len);
+                    }
+                    //8.服务端调用shutdownoutput方法告诉客户端文件传输完毕
+                    client.shutdownOutput();
+                    //9.关闭流，释放资源
+                    netOs.close();
+                    netIs.close();
+                    fis.close();
+                    client.close();
+                    System.out.println("文件传输完毕");
+
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+}
+
