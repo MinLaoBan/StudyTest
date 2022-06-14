@@ -1,0 +1,23 @@
+package file_d1;
+
+import java.io.*;
+
+public class CopyDemo05 {
+    public static void main(String[] args)  {
+        try {
+            InputStream is = new FileInputStream("D:\\壁纸\\meinv.jpg");
+            OutputStream os = new FileOutputStream("D:\\new.jpg");
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while((len = is.read(buffer)) != -1){
+                os.write(buffer,0,len);
+            }
+            System.out.println("复制完成了！！");
+            System.out.println(10 / 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
