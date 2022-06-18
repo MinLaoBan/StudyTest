@@ -1,0 +1,29 @@
+package d8_CommonsIO;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class CommonsIODemo01 {
+    public static void main(String[] args) throws Exception {
+        //1.完成文件复制
+        /*IOUtils.copy(new FileInputStream("D:\\壁纸\\meinv.jpg"),new FileOutputStream("D:\\壁纸\\meinv1.jpg"));*/
+
+        //2.完成文件复制到某个文件夹下
+       /* FileUtils.copyFileToDirectory(new File("D:\\壁纸\\meinv1.jpg"),new File("D:/"));*/
+
+        //3.完成文件夹复制到某个文件夹下
+        /*FileUtils.copyDirectoryToDirectory(new File("D:\\壁纸"),new File("D:\\壁纸a1"));*/
+
+       // FileUtils.deleteDirectory(new File("D:\\壁纸a1"));
+       // FileUtils.delete(new File("D:\\meinv1.jpg"));
+        Files.copy(Path.of("D://壁纸//1.jpg"),Path.of("D://DEMO1"));
+
+    }
+}
