@@ -1,0 +1,17 @@
+package file_d1;
+
+public class Test01_1 {
+    public static void main(String[] args) {
+        /**
+         * 求这个数的阶乘
+         */
+        System.out.println(f(5));
+    }
+    public static int f(int n){
+        if (n == 1){
+            return 1;
+        }else {
+            return f(n - 1) * n;
+        }
+    }
+}
