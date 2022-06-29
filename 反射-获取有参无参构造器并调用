@@ -1,0 +1,81 @@
+package com.itheima.d3_reflect_constructor;
+
+public class Student {
+    private String name;
+    private int age;
+
+    private Student(){
+        System.out.println("无参构造器执行");
+    }
+
+    public Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
+
+-----------------------------------------------------------
+package com.itheima.d3_reflect_constructor;
+
+import org.junit.Test;
+
+import java.lang.reflect.Constructor;
+
+public class TestDemo01 {
+    @Test
+    public void getDeclaredConstructor () throws Exception {
+        Class c = Student.class;
+        Constructor cons = c.getDeclaredConstructor(String.class,int.class);
+        System.out.println(cons.getName() + "==>" + cons.getParameterCount());
+    }
+}
+
+
+
+------------------------------------------------------------
+package com.itheima.d3_reflect_constructor;
+
+import org.junit.Test;
+
+import java.lang.reflect.Constructor;
+
+public class TestDemo02 {
+    @Test
+    public void getDeclaredConstructor () throws Exception {
+        Class c = Student.class;
+        Constructor cons = c.getDeclaredConstructor();
+        System.out.println(cons.getName() + "==>" + cons.getParameterCount());
+        cons.setAccessible(true);
+        Student s = (Student) cons.newInstance();
+        System.out.println(s);
+    }
+}
+
+
+
+
