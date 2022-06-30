@@ -1,0 +1,100 @@
+package com.itheima.d4_reflect_field;
+
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+
+public class FieldDemo01 {
+    @Test
+    public void getDeclaredFields(){
+        Class c = Student.class;
+        Field[] fields = c.getDeclaredFields();
+
+        for (Field field : fields) {
+            System.out.println(field.getName() + "==>" + field.getType());
+        }
+    }
+
+    @Test
+    public void getDeclaredField() throws Exception {
+        Class c = Student.class;
+        
+        Field f = c.getDeclaredField("age");
+        System.out.println(f.getName() + "==>" + f.getType());
+    }
+}
+
+
+-----------------------------------------------------------------------
+
+
+package com.itheima.d4_reflect_field;
+
+import org.junit.Test;
+
+import java.lang.reflect.Field;
+
+public class FieldDemo02 {
+    @Test
+    public void setField() throws Exception {
+        Class c = Student.class;
+        Field ageF = c.getDeclaredField("age");
+        ageF.setAccessible(true);
+        //赋值
+        Student s = new Student();
+        ageF.set(s,18);
+        System.out.println(s);
+        //取值
+        int age = (int) ageF.get(s);
+        System.out.println(age);
+    }
+}
+
+
+
+-----------------------------------------------------------------------
+
+
+package com.itheima.d4_reflect_field;
+
+public class Student {
+    private String name;
+    private int age;
+    public static String schoolName;
+    public static final String COUNTTRY = "中国";
+
+    public Student() {
+        System.out.println("无参构造器执行");
+    }
+
+    public Student(String name, int age) {
+        System.out.println("有参构造器执行");
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
+}
+
