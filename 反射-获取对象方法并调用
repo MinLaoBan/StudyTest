@@ -1,0 +1,55 @@
+package com.itheima.d5_reflect_method;
+
+import org.junit.Test;
+
+import java.lang.reflect.Method;
+
+public class MethodDemo01 {
+    @Test
+    public void getDeclaredMethods() throws Exception {
+        Class c = Dog.class;
+        Method m = c.getDeclaredMethod("eat");
+        Method m2 = c.getDeclaredMethod("eat", String.class);
+        m.setAccessible(true);
+        m2.setAccessible(true);
+
+        Dog d = new Dog();
+        Object result = m.invoke(d);
+        System.out.println(result);
+
+        Object result2 = m2.invoke(d,"骨头");
+        System.out.println(result2);
+    }
+}
+
+
+
+---------------------------------------------------------------------
+
+
+
+package com.itheima.d5_reflect_method;
+
+public class Dog {
+    private String name;
+    public Dog(){
+
+    }
+    public Dog(String name){this.name = name;}
+    public void run(){
+        System.out.println("狗跑的贼快");
+    }
+    public void eat(){
+        System.out.println("狗吃骨头");
+    }
+    private String eat(String name){
+        System.out.println("狗吃" + name);
+        return "吃的很开心";
+    }
+    public static void inAddr(){
+        System.out.println("有一群单身狗");
+    }
+    public String getName(){return name;}
+
+    public void setName(String name){this.name = name;}
+}
