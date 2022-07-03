@@ -1,0 +1,162 @@
+package d7_reflect_framework;
+
+public class ReflectDemo {
+    public static void main(String[] args) throws Exception {
+        Student s = new Student();
+        s.setName("猪八戒");
+        s.setClassName("跑路1班");
+        s.setAge(1000);
+        s.setHobby("吃，睡");
+        s.setSex('男');
+        MybatisUtil.save(s);
+
+        Teacher t = new Teacher();
+        t.setName("老王");
+        t.setSex('女');
+        t.setSalary(11.23);
+        MybatisUtil.save(t);
+    }
+}
+
+
+----------------------------------------------------------------
+
+
+package d7_reflect_framework;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Field;
+
+public class MybatisUtil {
+    public static void save(Object obj){
+        try (
+                PrintStream ps = new PrintStream(new FileOutputStream("junit-reflect-annotation-proxy-app/src/data.txt"),true);
+                ){
+            Class c = obj.getClass();
+            ps.println("==================" + c.getSimpleName() +  "=======================");
+            Field[] fields = c.getDeclaredFields();
+            for (Field field : fields) {
+                String name = field.getName();
+                field.setAccessible(true);
+                String value = field.get(obj) + "";
+                ps.println(name + "=" + value);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+
+----------------------------------------------------------------
+
+
+package d7_reflect_framework;
+
+public class Student {
+    private String name;
+    private char sex;
+    private int age;
+    private String className;
+    private String hobby;
+
+    public Student() {
+    }
+
+    public Student(String name, char sex, int age, String className, String hobby) {
+        this.name = name;
+        this.sex = sex;
+        this.age = age;
+        this.className = className;
+        this.hobby = hobby;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public char getSex() {
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        this.sex = sex;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
+    }
+}
+
+
+----------------------------------------------------------------
+
+
+package d7_reflect_framework;
+
+public class Teacher {
+    private String name;
+    private char sex;
+    private double salary;
+
+    public Teacher() {
+    }
+
+    public Teacher(String name, char sex, double salary) {
+        this.name = name;
+        this.sex = sex;
+        this.salary = salary;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public char getSex() {
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        this.sex = sex;
+    }
+
+    public double getSalary() {
+        return salary;
+    }
+
+    public void setSalary(double salary) {
+        this.salary = salary;
+    }
+}
+
+
