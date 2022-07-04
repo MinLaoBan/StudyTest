@@ -1,0 +1,76 @@
+package com.itheima.proxy;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+public class StarAgentProxy {
+    public static Skill getProxy(Star obj){
+        return (Skill) Proxy.newProxyInstance(obj.getClass().getClassLoader(),
+                obj.getClass().getInterfaces(), new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        System.out.println("收首付款~~");
+                        Object rs = method.invoke(obj,args);
+                        System.out.println("收尾款，把杨巅峰接回来");
+                        return rs;
+                    }
+                });
+    }
+}
+
+
+---------------------------------------------------------------------------------
+
+
+
+package com.itheima.proxy;
+
+public class Test {
+    public static void main(String[] args) {
+        Star s = new Star("杨巅峰");
+        s.jump();
+        s.sing();
+
+        Skill s2 = StarAgentProxy.getProxy(s);
+        s2.jump();
+        s2.sing();
+    }
+}
+
+
+---------------------------------------------------------------------------------
+
+
+package com.itheima.proxy;
+
+public interface Skill {
+    void jump();
+    void sing();
+}
+
+
+---------------------------------------------------------------------------------
+
+
+package com.itheima.proxy;
+
+public class Star implements Skill {
+    String name;
+
+    public Star(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void jump() {
+        System.out.println(name + "开始跳舞，很迷人！");
+    }
+
+    @Override
+    public void sing() {
+        System.out.println(name + "开始唱歌，你们都是小咪咪~~");
+    }
+}
+
+
