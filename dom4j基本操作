@@ -1,0 +1,220 @@
+package com.itheima.d1_dom4j;
+
+public class Contact {
+    private String name;
+    private int id;
+    private boolean vip;
+    private char gender;
+    private String email;
+
+
+    public Contact() {
+    }
+
+    public Contact(String name, int id, boolean vip, char garden, String email) {
+        this.name = name;
+        this.id = id;
+        this.vip = vip;
+        this.gender = garden;
+        this.email = email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isVip() {
+        return vip;
+    }
+
+    public void setVip(boolean vip) {
+        this.vip = vip;
+    }
+
+    public char getGarden() {
+        return gender;
+    }
+
+    public void setGender(char garden) {
+        this.gender = garden;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "Contact{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", vip=" + vip +
+                ", garden=" + gender +
+                ", email='" + email + '\'' +
+                '}';
+    }
+}
+
+
+----------------------------------------------------------------------
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<contactList>
+    <contact id="1" vip="true">
+        <name>   潘金莲  </name>
+        <gender>女</gender>
+        <email>panpan@itcast.cn</email>
+    </contact>
+    <contact id="2" vip="false">
+        <name>武松</name>
+        <gender>男</gender>
+        <email>wusong@itcast.cn</email>
+    </contact>
+    <contact id="3" vip="false">
+        <name>武大狼</name>
+        <gender>男</gender>
+        <email>wuda@itcast.cn</email>
+    </contact>
+    <user>
+    </user>
+</contactList>
+
+
+
+----------------------------------------------------------------------
+
+
+package com.itheima.d1_dom4j;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.junit.Test;
+
+import javax.xml.parsers.SAXParser;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Dom4jDemo2 {
+    @Test
+    public void parseToList() throws Exception {
+        //1.导入框架
+        //2.创建SaxReader对象
+        SAXReader saxReader = new SAXReader();
+        //3.加载xml文件成为文档对象Document对象
+        Document document = saxReader.read(Dom4jDemo2.class.
+                getResourceAsStream("/Contacts.xml"));
+        //4.先拿根元素
+        Element root = document.getRootElement();
+        //5.提取contact子元素
+        List<Element> contactEles = root.elements("contact");
+        //6.准备一个ArrayList集合封装联系人
+        List<Contact> contacts = new ArrayList<>();
+        //7.遍历contact
+        for (Element contactEle : contactEles) {
+            //8.每个子元素都是一个联系人对象
+            Contact contact = new Contact();
+            contact.setId(Integer.valueOf(contactEle.attributeValue("id")));
+            contact.setVip(Boolean.valueOf(contactEle.attributeValue("vip")));
+            contact.setName(contactEle.elementTextTrim("name"));
+            contact.setGender(contactEle.elementTextTrim("gender").charAt(0));
+            contact.setEmail(contactEle.elementText("email"));
+            //9.把联系人对象数据加入到list集合
+            contacts.add(contact);
+        }
+
+        //10.遍历list集合
+        for (Contact contact : contacts) {
+            System.out.println(contact);
+        }
+
+    }
+}
+
+
+
+
+----------------------------------------------------------------------
+
+
+package com.itheima.d1_dom4j;
+
+import org.dom4j.Attribute;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+import org.junit.Test;
+
+import javax.xml.parsers.SAXParser;
+import java.io.InputStream;
+import java.util.List;
+
+public class Dom4jHelloWorldDemo1 {
+    @Test
+    public void parseXMLData() throws Exception {
+        //1.创建一个Dom4j的解析对象，代表了整个dom4j对象
+        SAXReader saxReader = new SAXReader();
+        //2.把xml文件加载到内存中成为一个Document文档对象
+
+        InputStream is = Dom4jHelloWorldDemo1.class.getResourceAsStream("/Contacts.xml");
+        Document document = saxReader.read(is);
+
+        //3.获取根元素对象
+        Element root = document.getRootElement();
+        System.out.println(root.getName());
+
+
+        //4.拿根元素下的全部一级元素对象
+        List<Element> sonEles = root.elements("contact");
+        for (Element sonEle : sonEles) {
+            System.out.println(sonEle.getName());
+        }
+        //拿某个元素
+        Element userEle = root.element("user");
+        System.out.println(userEle.getName());
+
+        //默认提取第一个子元素对象
+        Element contact = root.element("contact");
+        System.out.println(contact.elementText("name"));
+
+        //获取子元素文本
+        System.out.println(contact.elementText("name"));
+        //去掉前后空格
+        System.out.println(contact.elementTextTrim("name"));
+
+        //获取当前元素下的子元素对象
+        Element email = contact.element("email");
+        System.out.println(email.getText());
+        //去掉前后空格
+        System.out.println(email.getTextTrim());
+
+        //根据元素获取属性值
+        Attribute idAttr = contact.attribute("id");
+        System.out.println(idAttr.getName() + "-->" + idAttr.getValue());
+        //直接提取属性值
+        System.out.println(contact.attributeValue("id"));
+        System.out.println(contact.attributeValue("vip"));
+
+    }
+}
+
+
