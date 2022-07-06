@@ -1,0 +1,60 @@
+package com.itheima.d2_xpath;
+
+import org.dom4j.*;
+import org.dom4j.io.SAXReader;
+import org.junit.Test;
+
+import java.util.List;
+
+public class XPathDemo {
+    @Test
+    public void parse01() throws Exception {
+        //a.创建解析器对象
+        SAXReader saxReader = new SAXReader();
+        //b.把xml加载成Document文档对象
+        Document document = saxReader.read(XPathDemo.class.getResourceAsStream("/Contacts2.xml"));
+        //c.检查全部的名称
+        List<Node> nodes = document.selectNodes("//@id");
+        for (Node node : nodes) {
+            Attribute attr = (Attribute) node;
+            System.out.println(attr.getName() + "-->" + attr.getValue());
+        }
+
+
+        Node node = document.selectSingleNode("//name[@id=888]");
+        Element ele = (Element) node;
+        System.out.println(ele.getTextTrim());
+    }
+}
+
+
+---------------------------------------------------------------------------------
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<contactList>
+    <contact id="1" vip="true">
+        <name>   潘金莲  </name>
+        <gender>女</gender>
+        <email>panpan@itcast.cn</email>
+    </contact>
+    <contact id="2" vip="false">
+        <name>武松</name>
+        <gender>男</gender>
+        <email>wusong@itcast.cn</email>
+    </contact>
+    <contact id="3" vip="false">
+        <name>武大狼</name>
+        <gender>男</gender>
+        <email>wuda@itcast.cn</email>
+    </contact>
+    <user>
+        <contact>
+            <info>
+
+                <name id="888">我是西门庆</name>
+            </info>
+         </contact>
+    </user>
+</contactList>
+
