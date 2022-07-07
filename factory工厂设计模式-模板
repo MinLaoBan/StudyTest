@@ -1,0 +1,94 @@
+package com.itheima.d3_factory_pattern;
+
+public class FactoryDemo {
+    public static void main(String[] args) {
+        Computer c1 = FactoryPattern.createComputer("huawei");
+        c1.start();
+        Computer c2 = FactoryPattern.createComputer("mac");
+        c2.start();
+    }
+}
+
+
+---------------------------------------------------------------------
+
+
+
+package com.itheima.d3_factory_pattern;
+
+public class FactoryPattern {
+    public static Computer createComputer(String info){
+        switch (info){
+            case "huawei":
+                Computer c = new Huawei();
+                c.setName("huawei pro 16");
+                c.setPrice(5999);
+                return c;
+            case "mac":
+                Computer c2 = new Mac();
+                c2.setName("MacBook pro");
+                c2.setPrice(12999);
+                return c2;
+            default:
+                return null;
+        }
+    }
+}
+
+
+---------------------------------------------------------------------
+
+
+package com.itheima.d3_factory_pattern;
+
+public abstract class Computer {
+    private String name;
+    private double price;
+
+    public abstract void start();
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+}
+
+
+---------------------------------------------------------------------
+
+
+package com.itheima.d3_factory_pattern;
+
+public class Huawei extends Computer{
+    @Override
+    public void start() {
+        System.out.println(getName() + "以非常优雅的方法启动了，展示了一个华为logo");
+    }
+}
+
+
+
+---------------------------------------------------------------------
+
+
+package com.itheima.d3_factory_pattern;
+
+public class Mac extends Computer{
+    @Override
+    public void start() {
+        System.out.println(getName() + "以非常优雅的方法启动了，展示了一个苹果logo");
+    }
+}
+
+
